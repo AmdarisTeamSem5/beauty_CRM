@@ -4,6 +4,7 @@ using GNT.Domain.BaseModels;
 using GNT.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace GNT.Infrastructure.Context;
 
 public class AppDbContext : DbContext, IAppDbContext
