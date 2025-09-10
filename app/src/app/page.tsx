@@ -13,7 +13,7 @@ export default function Home() {
           priority
         />
         <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li>This is the setup for our beauty CRM application.</li>
+          <li>This is the setup for our beauty CRM application.123</li>
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
             <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
