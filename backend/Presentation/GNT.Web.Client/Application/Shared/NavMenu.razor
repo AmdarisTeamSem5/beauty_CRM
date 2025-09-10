@@ -1,0 +1,23 @@
+@using GNT.Web.Client.Application.Pages.BusinessProducts
+@using GNT.Web.Client.Application.Pages.Roles
+@using GNT.Web.Client.Application.Pages.UserManagement
+
+@inject TranslateService t;
+
+<MudNavMenu Class="mud-width-full">
+    <AuthorizeView Policy="@nameof(Permission.ViewProducts)">
+        <MudNavLink Href="@BusinessProductListPage.PageRoute" Icon="@Icons.Material.Filled.ProductionQuantityLimits" IconColor="Color.Primary">@t[General.Products]</MudNavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Policy="@nameof(Permission.ViewUsers)">
+        <MudNavLink Href="@UserListPage.PageRoute" Icon="@Icons.Material.Filled.People" IconColor="Color.Primary">@t[General.Users]</MudNavLink>
+    </AuthorizeView>
+    
+    <AuthorizeView Policy="@nameof(Permission.ViewRoles)">
+        <MudNavLink Href="@RoleMatrixPage.PageRoute" Icon="@Icons.Material.Filled.TableView" IconColor="Color.Primary">@t[General.RoleMatrix]</MudNavLink>
+    </AuthorizeView>
+
+    <MudNavLink Href="application/user-details/00000000-0000-0000-0000-000000000000" Icon="@Icons.Material.Filled.PersonAddAlt" IconColor="Color.Primary">@t[General.Profile]</MudNavLink>
+</MudNavMenu>
+
+

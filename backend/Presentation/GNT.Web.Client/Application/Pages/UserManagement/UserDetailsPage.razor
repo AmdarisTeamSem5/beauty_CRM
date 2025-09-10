@@ -1,0 +1,19 @@
+@attribute [Route(PageRoute + "/{Id:guid}")]
+
+@using GNT.Web.Client.Application.Pages.UserManagement.Components
+@using GNT.Web.Client.Services
+
+@inject TranslateService t;
+
+<PageTitle>@t[General.MyDetails]</PageTitle>
+
+<MudText Typo="Typo.h4">@t[General.MyDetails]</MudText>
+
+<UserDetails Id="Id"></UserDetails>
+
+@code {
+    public const string PageRoute = "/application/user-details";
+
+    [Parameter]
+    public Guid Id { get; set; }
+}

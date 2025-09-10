@@ -1,0 +1,41 @@
+@using GNT.Common.Client.Services
+@using GNT.Dtos
+@using GNT.Shared.Dtos.UserManagement
+@using GNT.Web.Client.Authentication.Pages
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject CurrentUserService currentUserService;
+@inject CurrentUser currentUser;
+@inject NavigationManager navigationManager;
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    protected override async Task OnParametersSetAsync()
+    {
+        await currentUserService.InitializeAsync();
+
+        if (!currentUser.IsAuthenticated && !navigationManager.Uri.Contains(Login.PageRoute) && !navigationManager.Uri.Contains(ResetPassword.PageRoute))
+        {
+            navigationManager.NavigateTo(Login.PageRoute);
+        }
+        else if (currentUser.IsAuthenticated && !navigationManager.Uri.Contains($"{navigationManager.BaseUri}application"))
+        {
+            navigationManager.NavigateTo("application");
+        }
+
+    }
+}

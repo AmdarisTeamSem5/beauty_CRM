@@ -1,0 +1,37 @@
+@using GNT.Common.Client.Components
+@using GNT.Dtos
+@using GNT.Shared.Dtos.UserManagement
+@using GNT.Web.Client.Constants
+
+@inherits LayoutComponentBase
+@layout MainLayout
+
+@inject NavigationManager navManager;
+@inject CurrentUser currentUser;
+
+<SelectLanguage Style="position: fixed; top: 1rem; right: 1rem; z-index: 1000;" />
+
+<MudGrid Class="mud-width-full mud-height-full ma-0">
+    <MudItem xs="12" sm="12" md="6" Class="ma-0 pa-0">
+        <MudPaper Elevation="0" Class="d-flex ma-0 pa-0 align-center justify-center mud-width-full mud-height-full">
+            @Body
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="12" md="6" Class="ma-0 pa-0">
+        <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full mud-height-full rounded-0 primary-background-color">
+            <MudImage Src="icon.png" Width="400" Height="400" Elevation="0" Class="rounded-lg" Style="mix-blend-mode: luminosity" ObjectFit="ObjectFit.ScaleDown" />
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    protected override Task OnInitializedAsync()
+    {
+        if (currentUser.IsAuthenticated)
+        {
+            navManager.NavigateTo("/application", true);
+        }
+
+        return Task.CompletedTask;
+    }
+}

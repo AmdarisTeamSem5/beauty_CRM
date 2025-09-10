@@ -1,0 +1,6 @@
+@GNT.Web.Server_HostAddress = http://localhost:5191
+
+GET {{GNT.Web.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,155 @@
+﻿@attribute [Route(PageRoute)]
+@attribute [Authorize(Policy = nameof(Permission.ViewRoles))]
+
+@using GNT.Shared.Dtos.Roles
+@using GNT.Shared.Dtos.UserManagement
+@using GNT.Web.Client.Application.Pages.Roles.Components
+@using GNT.Web.Client.Constants
+@using GNT.Web.Client.Services
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Localization;
+
+@inject BlazorHttpClient httpClient;
+@inject DialogsService dialogService;
+@inject NavigationManager navManager;
+@inject CurrentUser currentUser;
+@inject TranslateService t;
+
+@if (!processing)
+{
+    <AuthorizeView Policy="@nameof(Permission.ManageRoles)">
+        <MudIconButton Icon="@Icons.Material.Filled.Save" OnClick="Save" Color="Color.Success" />
+        <MudIconButton Icon="@Icons.Material.Filled.Undo" OnClick="RevertChanges" Color="Color.Warning" />
+        <MudIconButton Icon="@Icons.Material.Filled.GroupAdd" OnClick="() => OpenRoleDialog(null)" Color="Color.Dark" />
+    </AuthorizeView>
+
+    <div class="d-flex flex-row overflow-scroll">
+        <div class="d-flex flex-column">
+            <div style="height: 50px"></div>
+
+            @foreach (var permission in allPermissions)
+            {
+                <div class="d-flex align-center" style="height: 50px">
+                    <MudText Align="Align.Center">@permission</MudText>
+                </div>
+            }
+        </div>
+        @foreach (var role in rolePermissionsMatrixViewModel)
+        {
+            <div class="d-flex flex-column mx-3">
+                <div class="d-flex flex-row align-center justify-content-center align-content-center px-1">
+                    <div class="d-flex" style="height: 50px">
+                        <MudText Align="Align.Center" Style="margin:auto">@role.Key.Name</MudText>
+                    </div>
+                    <AuthorizeView Policy="@nameof(Permission.ManageRoles)">
+                        @if (role.Key.IsDefault)
+                        {
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Info" Title="Rolurile de sistem nu pot fi editate"></MudIcon>
+                        }
+                        else
+                        {
+                            <MudIconButton Size="Size.Small" OnClick="() => OpenRoleDialog(role.Key.Id)" Icon="@Icons.Material.Filled.Edit" />
+                        }
+                    </AuthorizeView>
+                </div>
+
+                @foreach (var rolePermission in role.Value)
+                {
+                    <MudCheckBox Style="width: 50px; height: 50px; margin: auto"
+                    CheckedIcon="@Icons.Material.Filled.Check"
+                    Color="Color.Success"
+                    UncheckedIcon="@Icons.Material.Filled.DoNotDisturb"
+                    UnCheckedColor="Color.Error"
+                    T=bool
+                    Disabled="@(!canAssignPermissions || role.Key.IsDefault)"
+                    @bind-Value="role.Value[rolePermission.Key]" />
+                }
+            </div>
+        }
+    </div>
+}
+
+@code
+{
+    public const string PageRoute = "application/role-matrix";
+
+    private List<Permission> allPermissions = Enum.GetValues<Permission>().ToList();
+
+    private Dictionary<Guid, List<Permission>> rolePermissionsMatrixInitialModel = new Dictionary<Guid, List<Permission>>();
+
+    private Dictionary<RoleDto, Dictionary<Permission, bool>> rolePermissionsMatrixViewModel = new Dictionary<RoleDto, Dictionary<Permission, bool>>();
+
+    private bool canAssignPermissions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        canAssignPermissions = currentUser.Permissions.Any(d => d == Permission.ManageRoles);
+
+        await SetPageParameters();
+    }
+
+    private async Task SetPageParameters()
+    {
+        rolePermissionsMatrixInitialModel.Clear();
+        rolePermissionsMatrixViewModel.Clear();
+
+        var roles = await httpClient.Get<IEnumerable<RoleDto>>(ApplicationEndpoints.Roles);
+
+        foreach (var role in roles)
+        {
+            var permissions = await httpClient.Get<List<Permission>>($"{ApplicationEndpoints.Roles}/{role.Id}/permissionss");
+
+            rolePermissionsMatrixInitialModel.Add(role.Id, permissions);
+            rolePermissionsMatrixViewModel.Add(role, allPermissions.ToDictionary(d => d, v => permissions.Contains(v)));
+        }
+
+        processing = false;
+
+        StateHasChanged();
+    }
+
+    bool processing = false;
+
+    private async Task Save()
+    {
+        bool confirmed = await dialogService.OpenConfirmationDialog(t[General.ConfirmSave]);
+
+        if (!confirmed)
+        {
+            return;
+        }
+
+        processing = true;
+        StateHasChanged();
+
+        foreach (var rolePermissions in rolePermissionsMatrixViewModel)
+        {
+            var permissionsToAssign = rolePermissions.Value.Where(d => d.Value == true && !rolePermissionsMatrixInitialModel[rolePermissions.Key.Id].Any(x => x == d.Key)).Select(d => d.Key);
+            var permissionsToUnassign = rolePermissions.Value.Where(d => d.Value == false && rolePermissionsMatrixInitialModel[rolePermissions.Key.Id].Any(x => x == d.Key)).Select(d => d.Key);
+
+            if (permissionsToAssign.Any() || permissionsToUnassign.Any())
+            {
+                var postModel = new ManageRolePermissionsDto(permissionsToAssign, permissionsToUnassign);
+
+                await httpClient.Post($"{ApplicationEndpoints.Roles}/{rolePermissions.Key.Id}/permissions", postModel);
+            }
+        }
+
+        await SetPageParameters();
+    }
+
+    private async Task RevertChanges()
+    {
+        processing = true;
+        StateHasChanged();
+
+        await SetPageParameters();
+    }
+
+    private void OpenRoleDialog(Guid? roleId)
+    {
+        var dialogTitle = roleId.HasValue ? t[General.Add] : t[General.Edit];
+        dialogService.OpenCudDialog<ManageRole>(dialogTitle, roleId, async () => await SetPageParameters());
+    }
+}

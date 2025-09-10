@@ -1,0 +1,48 @@
+﻿.loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    width: 60px;
+    height: 60px;
+    transform-origin: 50% 50%; /* centrul SVG-ului */
+    will-change: transform;
+}
+
+    .spinner .path {
+        stroke: #1976d2; /* MudBlazor blue */
+        stroke-linecap: round;
+        animation: dash 1.5s ease-in-out infinite;
+    }
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
+}

@@ -1,0 +1,162 @@
+@using System.Reflection
+@using GNT.Dtos
+@using GNT.Dtos.Enums
+@using GNT.Shared.Dtos.Roles
+@using GNT.Shared.Dtos.UserManagement
+@using GNT.Shared.Translate
+@using GNT.Web.Client.Constants
+@using GNT.Web.Client.Services
+
+@inject BlazorHttpClient httpClient;
+@inject DialogsService confirmationService;
+@inject CurrentUser currentUser;
+@inject TranslateService t;
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudTextField @bind-Value="Email" Label="@t[General.Email]" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    </MudItem>
+    <MudItem xs="6">
+        <MudTextField @bind-Value="@FirstName" Label="@t[General.FirstName]" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    </MudItem>
+    <MudItem xs="6">
+        <MudTextField @bind-Value="@LastName" Label="@t[General.LastName]" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    </MudItem>
+    <MudItem xs="12">
+        <MudAutocomplete T="RoleDto"
+                         Value="null"
+                         Variant="Variant.Outlined"
+                         Margin="Margin.Dense"
+                         ValueChanged="e => AssignRole(e)"
+                         AdornmentIcon="@Icons.Material.Filled.Search"
+                         Label="@t[General.RoleMatrix]"
+                         SearchFunc="AutocompleteRoles"
+                         Placeholder="Roluri.." />
+
+        @foreach (var userRole in UserRolesViewModel)
+        {
+            <MudChip T="RoleDto" Color="Color.Primary" Value="userRole" OnClose="RemoveRole">@userRole.Name</MudChip>
+        }
+    </MudItem>
+    <MudItem xs="6">
+        <MudSwitch @bind-Value="@IsBlocked" Color="Color.Error" UnCheckedColor="Color.Success">@(IsBlocked ? t[General.Blocked] : t[General.Active])</MudSwitch>
+    </MudItem>
+</MudGrid>
+
+<MudButton StartIcon="@Icons.Material.Filled.Save" Size="Size.Small" Class="mt-5" Variant="Variant.Filled" OnClick="Save" Color="Color.Primary">@t[General.Save]</MudButton>
+
+@code {
+
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    [Parameter]
+    public Func<Task> Callback { get; set; }
+
+    private string Email { get; set; }
+    private string FirstName { get; set; }
+    private string LastName { get; set; }
+    private bool IsBlocked { get; set; }
+
+    private IEnumerable<RoleDto> InitialUserRoles = Enumerable.Empty<RoleDto>();
+    private List<RoleDto> UserRolesViewModel = new List<RoleDto>();
+
+    private UserDto user;
+
+    private IEnumerable<RoleDto> allRoles = Enumerable.Empty<RoleDto>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            user = await httpClient.Get<UserDto>($"{ApplicationEndpoints.Users}/{Id}");
+
+            Id = user.Id;
+            Email = user.Email;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            IsBlocked = user.IsBlocked;
+
+            InitialUserRoles = await httpClient.Get<List<RoleDto>>($"{ApplicationEndpoints.Users}/{Id}/roles");
+            UserRolesViewModel.AddRange(InitialUserRoles);
+        }
+
+        allRoles = await httpClient.Get<IEnumerable<RoleDto>>(ApplicationEndpoints.Roles);
+    }
+
+    private void AssignRole(RoleDto role)
+    {
+        if (!UserRolesViewModel.Any(x => x.Id == role.Id))
+        {
+            UserRolesViewModel.Add(role);
+        }
+
+        StateHasChanged();
+    }
+
+    private void RemoveRole(MudChip<RoleDto> chip)
+    {
+        UserRolesViewModel.Remove(chip.Value);
+        StateHasChanged();
+
+    }
+
+    private Task<IEnumerable<RoleDto>> AutocompleteRoles(string query, CancellationToken cancellationToken)
+    {
+        var filteredRoles = allRoles.Where(d => !UserRolesViewModel.Any(x => x.Id == d.Id));
+
+        if (!string.IsNullOrEmpty(query))
+        {
+            var lowerQuery = query.ToLower();
+
+            filteredRoles = filteredRoles
+            .Where(d => d.Name.ToLower().Contains(lowerQuery))
+            .OrderBy(d => d.Name.StartsWith(query))
+            .ToList();
+        }
+
+        return Task.FromResult(filteredRoles); ;
+    }
+
+    private async Task Save()
+    {
+        bool confirmed = await confirmationService.OpenConfirmationDialog(t[General.ConfirmSave]);
+
+        if (!confirmed)
+        {
+            return;
+        }
+
+        bool successfull = false;
+
+        if (!Id.HasValue)
+        {
+            var postModel = new CreateUserDto(Email, FirstName, LastName, IsBlocked);
+
+            Id = await httpClient.Post<CreateUserDto, Guid>(ApplicationEndpoints.Users, postModel);
+
+            successfull = Id.HasValue;
+        }
+        else
+        {
+            var original = new EditUserDto(user);
+            var edited = new EditUserDto(FirstName, LastName, IsBlocked);
+
+            var model = Generics.GetDifferences(original, edited);
+
+            successfull = await httpClient.Patch<EditUserDto>($"{ApplicationEndpoints.Users}/{Id}", model);
+        }
+
+        if (successfull)
+        {
+            var rolesToAdd = UserRolesViewModel.Where(d => !InitialUserRoles.Any(x => x.Id == d.Id)).Select(d => d.Id);
+            var rolesToRemove = InitialUserRoles.Where(d => !UserRolesViewModel.Any(x => x.Id == d.Id)).Select(d => d.Id);
+
+            var userRolesPostModel = new ManageUserRolesDto(rolesToAdd, rolesToRemove);
+
+            successfull = await httpClient.Post<ManageUserRolesDto>($"{ApplicationEndpoints.Users}/{Id}/roles", userRolesPostModel);
+
+            Callback?.Invoke();
+        }
+    }
+}

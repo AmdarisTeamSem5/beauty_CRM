@@ -1,0 +1,21 @@
+﻿<MudThemeProvider Theme="Theme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@inherits LayoutComponentBase
+
+@Body
+
+@code {
+
+    MudTheme Theme = new MudTheme()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = "#27bdea",
+                Secondary = "#f0f73c",
+                Tertiary = "#044474"
+            }
+        };
+}

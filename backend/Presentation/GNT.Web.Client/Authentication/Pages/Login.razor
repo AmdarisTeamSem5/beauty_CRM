@@ -1,0 +1,154 @@
+@attribute [Route(PageRoute)]
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+@using System.Timers
+@using Blazored.LocalStorage
+@using GNT.Common.Client.Services
+@using GNT.Dtos
+@using GNT.Shared.Errors
+@using GNT.Shared.Dtos.UserManagement
+@using GNT.Web.Client.Constants
+
+@inject BlazorHttpClient httpClient;
+@inject TranslateService t;
+@inject NavigationManager navigationManager
+@inject CurrentUserService currentUserService;
+@inject ILocalStorageService localStorage;
+
+<MudStack Class="d-flex justify-center align-center" Spacing="5" Style="width: 320px">
+    <MudText Typo="Typo.h4">@t[General.Authentication]</MudText>
+
+    <div class="mud-width-full">
+        <MudDivider Class="my-auto w-max" />
+    </div>
+
+    <MudForm @bind-IsValid="@success" Class="mud-width-full">
+        <MudStack>
+            <MudTextField T="string"
+                          @bind-Value="Email"
+                          Label="Email"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Disabled="securityCodeRequested"
+                          Placeholder="email@adress.example"
+                          Required="true"
+                          RequiredError="@t[FailureCode.RequiredField]"
+                          Validation="@(new EmailAddressAttribute() {ErrorMessage = t[FailureCode.InvalidEmailAddress]})" />
+
+            <MudTextField T="string"
+                          @bind-Value="Password"
+                          Label="@t[General.Password]"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Disabled="securityCodeRequested"
+                          Placeholder="@t[General.TypePassword]"
+                          InputType="InputType.Password" />
+            @if (securityCodeRequested)
+            {
+                <MudAlert Severity="Severity.Success">@t[General.TFAInfo]</MudAlert>
+
+                <MudTextField T="string"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              @bind-Value="SecurityCode"
+                              Label="@t[General.SecurityCode]"
+                              Placeholder="@t[General.TypeCode]"
+                              InputType="InputType.Number" />
+            }
+        </MudStack>
+
+        @if (securityCodeRequested)
+        {
+            <div class="d-flex align-center justify-space-between">
+                <MudButton OnClick="SendLoginRequest" Color="Color.Primary" Variant="Variant.Filled" Disabled="@(string.IsNullOrEmpty(SecurityCode))" Class="mr-auto mt-2">Login</MudButton>
+            </div>
+
+            <MudButton Variant=Variant.Text OnClick="SendTwoFactorSecurityCode" Class="m-auto" Size=Size.Small Disabled="@(timeSpan.Seconds != 0)">@(timeSpan.Seconds != 0 ? (t[General.ResendCodeCountdown]).Value.Replace("{{t}}", timeSpan.ToString(@"ss")) : t[General.ResendCode])</MudButton>
+
+        }
+        else
+        {
+            <div class="d-flex align-center justify-space-between">
+                <MudButton OnClick="SendTwoFactorSecurityCode" Color="Color.Primary" Variant="Variant.Filled" Disabled="@(!success)" Class="mr-auto mt-2">Login (Two-factor)</MudButton>
+            </div>
+            <MudButton Size="Size.Small" Variant=Variant.Text OnClick="@(() => navigationManager.NavigateTo(ResetPasswordRequest.PageRoute))" Class="m-auto">@t[General.ForgotPassword]</MudButton>
+        }
+    </MudForm>
+</MudStack>
+
+
+<style>
+    .bold-text {
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    public const string PageRoute = "/auth/login";
+
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public string SecurityCode { get; set; }
+
+    bool success;
+
+    bool securityCodeRequested = false;
+
+    private Timer timer = new Timer(1000);
+    private TimeSpan timeSpan;
+
+    protected override Task OnParametersSetAsync()
+    {
+        return base.OnParametersSetAsync();
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        timer.Elapsed += (o, e) =>
+        {
+            if (timeSpan.Seconds > 0)
+            {
+                timeSpan = timeSpan.Subtract(TimeSpan.FromSeconds(1));
+                StateHasChanged();
+            }
+            else
+            {
+                timer.Stop();
+            }
+        };
+
+        return Task.CompletedTask;
+    }
+
+    private async Task SendTwoFactorSecurityCode()
+    {
+        var postModel = new LoginDto(Email, Password);
+
+        securityCodeRequested = await httpClient.Post<LoginDto>($"{ApplicationEndpoints.Authentication}/send-two-factor-code", postModel);
+
+        timeSpan = TimeSpan.FromSeconds(59);
+
+        timer.Start();
+    }
+
+    private async Task SendLoginRequest()
+    {
+        var postModel = new LoginDto(Email, Password, SecurityCode);
+
+        var token = await httpClient.Post<LoginDto, TokenDto>($"{ApplicationEndpoints.Authentication}/log-in", postModel);
+
+        if (token == null)
+        {
+            SecurityCode = null;
+        }
+
+        if (token != null)
+        {
+            await localStorage.SetItemAsync("jwt-cookie", token.Value);
+            await currentUserService.InitializeAsync();
+
+            navigationManager.NavigateTo("/application", true);
+        }
+    }
+}

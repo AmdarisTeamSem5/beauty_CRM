@@ -1,0 +1,50 @@
+@using GNT.Common.Client.Services
+@using GNT.Shared.Translate
+@using GNT.Web.Client.Services
+@using System.Reflection;
+@using MudBlazor
+
+@inject BlazorHttpClient httpClient;
+@inject TranslateService t;
+
+<MudDialog>
+    <DialogContent>
+        <DynamicComponent Type="typeof(TComponent)" Parameters="parameters"></DynamicComponent>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@t[General.Cancel]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@typeparam TComponent
+
+@code {
+
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; }
+
+    TComponent Component { get; set; }
+
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    [Parameter]
+    public Func<Task> Callback { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    private Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+    protected override void OnInitialized()
+    {
+        parameters.Add("Id", Id);
+        parameters.Add("Callback", (object)OnSuccessfullySaved);
+    }
+
+    public async Task OnSuccessfullySaved()
+    {
+        await Callback?.Invoke();
+
+        MudDialog.Close();
+    }
+}

@@ -1,0 +1,19 @@
+@page "/application"
+
+@using GNT.Shared.Dtos.UserManagement
+
+@inject CurrentUser currentUser;
+@inject NavigationManager navigationNamanger;
+
+@code {
+
+    protected override Task OnInitializedAsync()
+    {
+        if (!currentUser.IsAuthenticated)
+        {
+            navigationNamanger.NavigateTo("", true);
+        }
+
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,66 @@
+@attribute [Route(PageRoute)]
+
+@using GNT.Common.Client.Components
+@using GNT.Shared.Dtos.Pagination
+@using GNT.Shared.Dtos.UserManagement
+@using GNT.Web.Client.Application.Pages.UserManagement.Components
+@using GNT.Web.Client.Constants
+@using GNT.Web.Client.Services
+
+@inject BlazorHttpClient blazorHttpClient
+@inject DialogsService dialogsService;
+@inject TranslateService t;
+
+<PageTitle>Utilizatori</PageTitle>
+
+<MudIconButton Icon="@Icons.Material.Filled.PersonAddAlt1" Color="Color.Primary" OnClick="() => OpenDialog(null)" />
+
+<MudDataGrid T="UserDto"
+             ServerData="@(state => blazorHttpClient.GetServerGridData(ApplicationEndpoints.GetUsers, state))"
+             @ref="dataGrid"
+             Hover=true
+             Context="context"
+             SortMode="SortMode.Multiple"
+             Dense="true">
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="3">
+
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="d => d.Email" Title="Email" />
+        <PropertyColumn Property="d => d.FirstName" Title="@t[General.FirstName]" />
+        <PropertyColumn Property="d =>d.LastName" Title="@t[General.LastName]" />
+        <PropertyColumn Property="d => d.IsBlocked" Title="@t[General.Active]">
+            <CellTemplate>
+                <MudIcon Icon="@(context.Item.IsBlocked ? Icons.Material.Filled.NotInterested : Icons.Material.Filled.VerifiedUser)" Color="@(context.Item.IsBlocked ? Color.Error : Color.Success)" />
+            </CellTemplate>
+        </PropertyColumn>
+        <TemplateColumn Context="item">
+            <CellTemplate>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="() => OpenDialog(item.Item.Id)">Detalii</MudButton>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent>
+        <MudText>@t[General.NoItemsFound]</MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        <MudDataGridPager T="UserDto" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    public const string PageRoute = "/application/users";
+
+    private void OpenDialog(Guid? id = null)
+    {
+        var message = id.HasValue ? t[General.Add] : t[General.Edit];
+
+        dialogsService.OpenCudDialog<UserDetails>(message, id, dataGrid.ReloadServerData);
+    }
+
+    public MudDataGrid<UserDto> dataGrid { get; set; }
+}

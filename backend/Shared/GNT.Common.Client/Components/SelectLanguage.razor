@@ -1,0 +1,45 @@
+@using System.Globalization
+@using Blazored.LocalStorage
+@using MudBlazor
+
+@inject ILocalStorageService localStorage
+@inject NavigationManager navManager
+
+<div style="width: 40px;" class="d-flex flex-wrap align-items-center mx-4">
+    <MudSelect T=string
+               DisableUnderLine
+               Variant=Variant.Outlined
+               Margin=Margin.Dense
+               Style="@Style"
+               Dense=true
+               Value="CurrentCulture"
+               Adornment=Adornment.None
+               ListClass="mud-theme-primary"
+               ValueChanged="i => OnCultureChanged(i)">
+        @foreach (var culture in SupportedCulturesWithName)
+        {
+            <MudSelectItem Value="culture.Value"><span style='color:white;'>@culture.Key</span></MudSelectItem>
+        }
+    </MudSelect>
+</div>
+
+@code {
+    [Parameter]
+    public string Style { get; set; }
+    private string CurrentCulture { get; set; } = CultureInfo.CurrentCulture.Name;
+
+    public static readonly Dictionary<string, string> SupportedCulturesWithName = new Dictionary<string, string>()
+        {
+            { "RO", "ro" },
+            { "EN", "en-US" }
+        };
+
+    public void OnCultureChanged(string culture)
+    {
+        if (culture != CurrentCulture)
+        {
+            localStorage.SetItemAsync<string>("culture", culture);
+            navManager.NavigateTo("", forceLoad: true);
+        }
+    }
+}

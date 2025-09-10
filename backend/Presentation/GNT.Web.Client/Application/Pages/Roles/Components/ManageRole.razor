@@ -1,0 +1,97 @@
+﻿@using GNT.Shared.Dtos.Roles
+@using GNT.Web.Client.Services
+
+@inject BlazorHttpClient httpClient;
+@inject DialogsService dialogsService;
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudTextField @bind-Value="Name" Label="Nume" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    </MudItem>
+    <MudItem xs="12">
+        <MudTextField @bind-Value="Description" Label="Descriere" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="3" />
+    </MudItem>
+    <MudItem xs="12">
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Save">Salveaza</MudButton>
+        @if (Id.HasValue)
+        {
+            <MudButton Class="ml-3" Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Sterge</MudButton>
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    [Parameter]
+    public Func<Task> Callback { get; set; }
+
+    private string Name { get; set; }
+    private string Description { get; set; }
+
+    private RoleDto role { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            role = await httpClient.Get<RoleDto>($"{ApplicationEndpoints.Roles}/{Id.Value}");
+
+            Name = role.Name;
+            Description = role.Description;
+        }
+    }
+
+    private async Task Save()
+    {
+        bool successfull;
+
+        var action = Id.HasValue ? "modificati" : "adaugati";
+
+        bool confirmed = await dialogsService.OpenConfirmationDialog($"Sunteti sigur ca doriti sa {action} acest rol?");
+
+        if (!confirmed)
+        {
+            return;
+        };
+
+        if (!Id.HasValue)
+        {
+            var postModel = new CreateRoleDto(Name, Description);
+
+            successfull = await httpClient.Post<CreateRoleDto>(ApplicationEndpoints.Roles, postModel);
+        }
+        else
+        {
+            var original = new EditRoleDto(role.Name, role.Description);
+            var edited = new EditRoleDto(Name, Description);
+
+            var editModel = Generics.GetDifferences(original, edited);
+
+            successfull = await httpClient.Patch<EditRoleDto>($"{ApplicationEndpoints.Roles}/{Id.Value}", editModel);
+        }
+
+        if (successfull)
+        {
+            await Callback?.Invoke();
+        }
+    }
+
+    private async Task Delete()
+    {
+        bool confirmed = await dialogsService.OpenConfirmationDialog("Sunteti sigur ca doriti sa stergeti acest rol?");
+
+        if (!confirmed)
+        {
+            return;
+        };
+
+        var successfull = await httpClient.Delete($"{ApplicationEndpoints.Roles}/{Id.Value}");
+
+        if (successfull)
+        {
+            await Callback?.Invoke();
+        }
+    }
+}

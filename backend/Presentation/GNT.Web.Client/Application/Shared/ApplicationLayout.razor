@@ -1,0 +1,43 @@
+@using Blazored.LocalStorage
+@using GNT.Common.Client.Components
+
+@inject ILocalStorageService localStorage;
+@inject NavigationManager navigationNamanger;
+@inject TranslateService t;
+
+@inherits LayoutComponentBase
+@layout MainLayout
+
+<AuthorizeView>
+    <MudLayout>
+        <MudAppBar Elevation="0" Class="primary-background-color">
+            <MudStack Spacing="0">
+                <MudText Typo="Typo.h5">GNT</MudText>
+                <MudText Typo="Typo.subtitle2">Dream Template</MudText>
+            </MudStack>
+            <MudSpacer />
+            <SelectLanguage />
+            <MudText Typo="Typo.button" Class="mr-2">@context.User.FindFirst("FirstName")?.Value @context.User.FindFirst("LastName")?.Value</MudText>
+            <MudButton Variant=Variant.Text StartIcon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="@(() => Logout())">@t[General.Exit]</MudButton>
+        </MudAppBar>
+
+        <MudDrawer Open="true" Width="180px" ClipMode="DrawerClipMode.Docked" Elevation="1" Variant="DrawerVariant.Responsive">
+            <NavMenu />
+        </MudDrawer>
+        <MudMainContent>
+            <MudContainer Class="ma-2" MaxWidth="MaxWidth.ExtraExtraLarge">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
+</AuthorizeView>
+
+@code {
+
+    private async Task Logout()
+    {
+        await localStorage.RemoveItemAsync("jwt-cookie");
+
+        navigationNamanger.NavigateTo("/", true);
+    }
+}

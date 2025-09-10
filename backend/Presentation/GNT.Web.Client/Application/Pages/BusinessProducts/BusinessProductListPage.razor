@@ -1,0 +1,80 @@
+﻿@attribute [Route(PageRoute)]
+
+@using GNT.Shared.Dtos.BusinessProducts
+@using GNT.Shared.Translate
+@using GNT.Web.Client.Application.Pages.BusinessProducts.Components
+@using GNT.Web.Client.Services
+@using System.Globalization
+
+@inject BlazorHttpClient blazorHttpClient
+@inject DialogsService dialogsService;
+@inject TranslateService t;
+
+<PageTitle>Utilizatori</PageTitle>
+
+<MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="() => OpenDialog(null)" />
+
+<MudDataGrid T="BusinessProductDto"
+             ServerData="@(state => blazorHttpClient.GetServerGridData(ApplicationEndpoints.GetBusinessProducts, state))"
+             @ref="dataGrid"
+             Hover=true
+             Context="context"
+             SortMode="SortMode.Multiple"
+             Dense="true">
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="3">
+
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="d => d.Name" Title="@t[General.ProductName]" />
+        <PropertyColumn Property="d => d.Price" Title="@t[General.Price]" />
+        <PropertyColumn Property="d => d.Type" Title="@t[General.ProductType]">
+            <CellTemplate>
+                @t.Enum(context.Item.Type)
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="d => d.IsInStock" Title="@t[General.IsInStock]">
+            <CellTemplate>
+                <MudIcon Icon="@(context.Item.IsInStock ? Icons.Material.Filled.VerifiedUser : Icons.Material.Filled.NotInterested)" Color="@(context.Item.IsInStock ? Color.Success : Color.Error)" />
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="d => d.DatetIn" Title="@t[General.DateIn]">
+            <CellTemplate>
+                @context.Item.DatetIn.ToShortString()
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="d => d.DateOut" Title="@t[General.DateOut]">
+            <CellTemplate>
+                @context.Item.DateOut.ToShortString()
+            </CellTemplate>
+        </PropertyColumn>
+        <TemplateColumn Context="item">
+            <CellTemplate>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => OpenDialog(item.Item.Id)" Size="Size.Small">@t[General.Details]</MudButton>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent>
+        <MudText>@t[General.NoItemsFound]</MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        <MudDataGridPager T="BusinessProductDto" />
+    </PagerContent>
+</MudDataGrid>
+
+    @code {
+    public const string PageRoute = "/application/business-products";
+
+
+    private void OpenDialog(Guid? id = null)
+    {
+        var message = id.HasValue ? t[General.Add] : t[General.Edit];
+
+        dialogsService.OpenCudDialog<BusinessProductDetails>(message, id, dataGrid.ReloadServerData);
+    }
+
+    public MudDataGrid<BusinessProductDto> dataGrid { get; set; }
+}
