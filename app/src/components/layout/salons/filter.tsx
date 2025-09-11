@@ -1,22 +1,23 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const SalonsFilters = () => {
   const clearFilters = () => {
-    console.log('Clearing filters');
+    console.log("Clearing filters");
   };
 
   const applyFilters = () => {
-    console.log('Applying filters');
+    console.log("Applying filters");
   };
 
   return (
-    <Card className="h-full w-80">
+    <Card className="h-full w-100">
       <CardHeader className="pb-4">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-semibold">Filters</CardTitle>
           <div className="flex gap-1">
-            <Button 
+            <Button
               onClick={applyFilters}
               variant="ghost"
               size="sm"
@@ -24,7 +25,7 @@ const SalonsFilters = () => {
             >
               Apply
             </Button>
-            <Button 
+            <Button
               onClick={clearFilters}
               variant="ghost"
               size="sm"
