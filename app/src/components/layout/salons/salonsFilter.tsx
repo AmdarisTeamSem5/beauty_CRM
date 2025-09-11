@@ -1,14 +1,22 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ServicesFilter } from "./servicesFilter";
+import { PriceRangeFilter } from "./priceRangeFilter";
+import { useFilters } from "@/hooks/useFilters";
+import { fetchSalons } from "@/lib/api";
 
 const SalonsFilters = () => {
+  const filters = useFilters();
+
   const clearFilters = () => {
-    console.log("Clearing filters");
+    filters.clear();
+    fetchSalons(filters).then(console.log); // fetch default salons
   };
 
-  const applyFilters = () => {
-    console.log("Applying filters");
+  const applyFilters = async () => {
+    const data = await fetchSalons(filters);
+    console.log("Filtered salons:", data.salons);
   };
 
   return (
@@ -31,13 +39,14 @@ const SalonsFilters = () => {
               size="sm"
               className="border border-transparent hover:border-gray-300 hover:bg-gray-50"
             >
-              Clear Filters
+              Clear
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Here goes the content*/}
+      <CardContent className="space-y-6">
+        <ServicesFilter filters={filters} />
+        <PriceRangeFilter filters={filters} />
       </CardContent>
     </Card>
   );

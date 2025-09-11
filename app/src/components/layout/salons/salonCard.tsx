@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Card,
   CardContent,
@@ -8,15 +9,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const SalonCard = () => {
+export interface Salon {
+  id: string;
+  name?: string;
+  description?: string;
+}
+
+interface SalonCardProps {
+  salon: Salon;
+}
+
+const SalonCard = ({ salon }: SalonCardProps) => {
+  // Optional: extra safeguard
+  if (!salon) return null;
+
   return (
     <Card className="w-full min-h-72">
       <CardHeader>
-        <CardTitle>{/* Card Title */}</CardTitle>
-        <CardDescription>{/* Card Description */}</CardDescription>
+        <CardTitle>{salon.name ?? "Unnamed Salon"}</CardTitle>
+        <CardDescription>{salon.description ?? "No description available"}</CardDescription>
       </CardHeader>
-      <CardContent>{/* <p>Card Content</p> */}</CardContent>
-      <CardFooter>{/* <p>Card Footer</p> */}</CardFooter>
+      <CardContent>{/* Additional content */}</CardContent>
+      <CardFooter>{/* Footer content */}</CardFooter>
     </Card>
   );
 };
