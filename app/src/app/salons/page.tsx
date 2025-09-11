@@ -1,6 +1,6 @@
 "use server";
 
-import SalonsFilters from "../../components/layout/salons/filter";
+import SalonsFilters from "../../components/layout/salons/salonsFilter";
 import SalonCard from "@/components/layout/salons/salonCard";
 
 export default async function SalonsPage() {
