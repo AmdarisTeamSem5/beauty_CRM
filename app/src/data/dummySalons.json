@@ -1,0 +1,92 @@
+[
+    {
+        "id": "1",
+        "ownerId": "101",
+        "name": "Glamour Studio",
+        "description": "A modern salon offering haircuts, coloring, and styling.",
+        "address": "123 Main St, City Center",
+        "region": "north",
+        "phone": "+37360123456",
+        "email": "glamour.studio@example.com",
+        "image": "https://images.unsplash.com/photo-1727393181791-58d9319d7c60?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGluayUyMGJlYXV0eSUyMHNhbG9uc3xlbnwwfHwwfHx8MA%3D%3D",
+        "priceLevel": 3,
+        "rating": 4.6,
+        "services": [
+            "Haircuts",
+            "Coloring",
+            "Styling"
+        ]
+    },
+    {
+        "id": "2",
+        "ownerId": "102",
+        "name": "Elegance Beauty Studio",
+        "description": "Full-service beauty salon specializing in skincare and nails.",
+        "address": "45 Rose Ave, Downtown",
+        "region": "south",
+        "phone": "+37360987654",
+        "email": "contact@elegancebeauty.com",
+        "image": "https://images.unsplash.com/photo-1707930897652-6ed8e2c33d99?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGluayUyMGJlYXV0eSUyMHNhbG9uc3xlbnwwfHwwfHx8MA%3D%3D",
+        "priceLevel": 4,
+        "rating": 4.8,
+        "services": [
+            "Balayage",
+            "Facials",
+            "Nails"
+        ]
+    },
+    {
+        "id": "3",
+        "ownerId": "103",
+        "name": "Luxury Hair Lounge",
+        "description": "Premium hair treatments and professional styling services.",
+        "address": "78 Central Blvd, Uptown",
+        "region": "west",
+        "phone": "+37367891234",
+        "email": "luxury.hair@example.com",
+        "image": "https://images.unsplash.com/photo-1553855994-da8397e155c7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHBpbmslMjBiZWF1dHklMjBzYWxvbnN8ZW58MHx8MHx8fDA%3D",
+        "priceLevel": 5,
+        "rating": 4.9,
+        "services": [
+            "Keratin Treatment",
+            "Hair Extensions",
+            "Blowouts"
+        ]
+    },
+    {
+        "id": "4",
+        "ownerId": "104",
+        "name": "The Nail Bar",
+        "description": "Trendy salon focusing on manicure, pedicure, and nail art.",
+        "address": "56 Park Lane, Old Town",
+        "region": "east",
+        "phone": "+37369912345",
+        "email": "info@thenailbar.com",
+        "image": "https://images.unsplash.com/photo-1614697376614-f2881e159275?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHBpbmslMjBiZWF1dHklMjBzYWxvbnN8ZW58MHx8MHx8fDA%3D",
+        "priceLevel": 2,
+        "rating": 4.4,
+        "services": [
+            "Manicure",
+            "Pedicure",
+            "Nail Art"
+        ]
+    },
+    {
+        "id": "5",
+        "ownerId": "105",
+        "name": "Bella Spa & Salon",
+        "description": "Relaxing spa and salon offering massages, facials, and beauty treatments.",
+        "address": "12 Garden St, Riverside",
+        "region": "north",
+        "phone": "+37365544321",
+        "email": "bellaspa@example.com",
+        "image": "https://images.unsplash.com/photo-1637958449481-c49317debbce?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBpbmslMjBiZWF1dHklMjBzYWxvbnN8ZW58MHx8MHx8fDA%3D",
+        "priceLevel": 3,
+        "rating": 4.7,
+        "services": [
+            "Massages",
+            "Facials",
+            "Body Treatments"
+        ]
+    }
+]
