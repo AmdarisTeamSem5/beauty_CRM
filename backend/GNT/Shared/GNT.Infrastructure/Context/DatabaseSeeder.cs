@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using GNT.Shared.Enums;
 
+// TODO: Add seeding for Salon and SalonService
 namespace GNT.Infrastructure
 {
     public static class DatabaseSeeder

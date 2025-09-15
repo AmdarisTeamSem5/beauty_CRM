@@ -15,6 +15,7 @@ namespace GNT.Application.Interfaces
         DbSet<RolePermission> RolePermission { get; set; }
 
         DbSet<Salon> Salon { get; set; }
+        DbSet<SalonService> SalonService { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         Task<int> AddAndSaveChangesAsync<T>(T entity, CancellationToken cancellationToken);

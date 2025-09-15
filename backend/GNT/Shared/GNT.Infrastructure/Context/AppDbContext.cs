@@ -35,6 +35,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public virtual DbSet<RolePermission> RolePermission { get; set; }
 
     public virtual DbSet<Salon> Salon { get; set; }
+    public virtual DbSet<SalonService> SalonService { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

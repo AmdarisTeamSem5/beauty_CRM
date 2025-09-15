@@ -32,40 +32,41 @@ internal class EditSalonCommandHandler : RequestHandler<EditSalonCommand, Unit>
 
         if (dbProduct == null)
         {
-            throw new BusinessException(FailureCode.NotFound);
+            throw new SalonException(FailureCode.NotFound);
         }
-        // TODO:Adrian Implement this
 
-        // if (editModel.Name != null)
-        // {
-        //     dbProduct.Name = editModel.Name;
-        // }
-        //
-        // if (editModel.Price.HasValue)
-        // {
-        //     dbProduct.Price = editModel.Price.Value;
-        // }
-        //
-        // if (editModel.Type.HasValue)
-        // {
-        //     dbProduct.Type = editModel.Type.Value;
-        // }
-        //
-        // if (editModel.IsInStock.HasValue)
-        // {
-        //     dbProduct.IsInStock = editModel.IsInStock.Value;
-        // }
-        //
-        // if (editModel.DatetIn.HasValue)
-        // {
-        //     dbProduct.DatetIn = editModel.DatetIn.Value;
-        // }
-        //
-        // if (editModel.DateOut.HasValue)
-        // {
-        //     dbProduct.DateOut = editModel.DateOut.Value;
-        // }
-        //
+        if (editModel.OwnerId.HasValue)
+        {
+            dbProduct.OwnerId = editModel.OwnerId.Value;
+        }
+        if (editModel.Name != null)
+        {
+            dbProduct.Name = editModel.Name;
+        }
+
+        if (editModel.Description != null)
+        {
+            dbProduct.Description = editModel.Description;
+        }
+
+        if (editModel.Address != null)
+        {
+            dbProduct.Address = editModel.Address;
+        }
+
+        dbProduct.Region = editModel.Region.Value;
+
+        if (editModel.Phone != null)
+        {
+            dbProduct.Phone = editModel.Phone;
+        }
+
+        if (editModel.Email != null)
+        {
+            dbProduct.Email = editModel.Email;
+        }
+
+
         await appDbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
