@@ -10,9 +10,11 @@ namespace GNT.Application.Interfaces
         DbSet<User> User { get; set; }
         DbSet<UserRole> UserRole { get; set; }
         DbSet<UserSecurityCode> UserSecurityCode { get; set; }
-        
+
         DbSet<Role> Role { get; set; }
         DbSet<RolePermission> RolePermission { get; set; }
+
+        DbSet<Salon> Salon { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         Task<int> AddAndSaveChangesAsync<T>(T entity, CancellationToken cancellationToken);
