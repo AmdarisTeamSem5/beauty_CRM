@@ -1,3 +1,4 @@
+using GNT.Shared.Enums;
 namespace GNT.Shared.Dtos.SalonServices
 {
     public class CreateSalonServiceDto
@@ -8,6 +9,7 @@ namespace GNT.Shared.Dtos.SalonServices
         }
 
         public CreateSalonServiceDto(
+            SalonServiceType type,
             string name,
             string description,
             Guid salonId,
@@ -15,6 +17,7 @@ namespace GNT.Shared.Dtos.SalonServices
             int durationMinutes,
             int priceMDL)
         {
+            Type = type;
             Name = name;
             Description = description;
             SalonId = salonId;
@@ -23,6 +26,7 @@ namespace GNT.Shared.Dtos.SalonServices
             PriceMDL = priceMDL;
         }
 
+        public SalonServiceType Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Guid SalonId { get; set; }
