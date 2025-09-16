@@ -10,7 +10,7 @@ using GNT.Shared.Dtos.Roles;
 namespace GNT.Web.Server.Controllers
 {
 
-    [Authorize]
+    // [Authorize]
     [Route("api/[controller]")]
     public class RoleController : BaseController
     {
