@@ -4,12 +4,12 @@ using GNT.Shared.Dtos.Pagination;
 using GNT.Shared.Dtos.Roles;
 using GNT.Shared.Dtos.UserManagement;
 using GNT.Web.Server.Config;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GNT.Web.Server;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : BaseController
