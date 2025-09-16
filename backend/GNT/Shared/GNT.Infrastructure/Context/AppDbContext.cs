@@ -30,9 +30,12 @@ public class AppDbContext : DbContext, IAppDbContext
     public virtual DbSet<User> User { get; set; }
     public virtual DbSet<UserRole> UserRole { get; set; }
     public virtual DbSet<UserSecurityCode> UserSecurityCode { get; set; }
-    
+
     public virtual DbSet<Role> Role { get; set; }
     public virtual DbSet<RolePermission> RolePermission { get; set; }
+
+    public virtual DbSet<Salon> Salon { get; set; }
+    public virtual DbSet<SalonService> SalonService { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
