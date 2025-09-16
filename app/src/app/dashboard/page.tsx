@@ -41,7 +41,7 @@ export default function DashboardPage() {
       />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -100,7 +100,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-4 mb-8">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
@@ -113,7 +113,7 @@ export default function DashboardPage() {
 
             <div className="h-6 w-px bg-gray-200"></div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
               <Filter className="h-4 w-4 text-gray-400" />
               <Combobox
                 options={statusOptions}

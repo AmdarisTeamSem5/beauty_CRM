@@ -28,9 +28,9 @@ export default function SalonResults() {
   }, [filters]);
 
   return (
-    <>
+    <div className="w-full">
       {salons.length > 0 ? (
-        <div className="grid grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6  mx-auto">
           {salons.filter(Boolean).map((salon) => (
             <SalonCard key={salon.id} salon={salon} />
           ))}
@@ -38,6 +38,6 @@ export default function SalonResults() {
       ) : (
         <div className="col-span-3 text-gray-500">No salons found</div>
       )}
-    </>
+    </div>
   );
 }
