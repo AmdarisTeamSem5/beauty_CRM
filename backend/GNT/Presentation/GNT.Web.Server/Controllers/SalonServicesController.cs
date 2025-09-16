@@ -3,6 +3,7 @@ using GNT.Application.SalonServices.Commands;
 using GNT.Application.SalonServices.Queries;
 using GNT.Shared.Dtos.SalonServices;
 using GNT.Shared.Dtos.Pagination;
+using GNT.Shared.Enums;
 using GNT.Web.Server.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,4 +44,22 @@ public class SalonServiceController : BaseController
     {
         await Mediator.Send(new DeleteSalonServiceCommand(id));
     }
+
+    // Endpoint for requesting the salon service types
+    [HttpGet("Types")]
+    [AllowAnonymous] // Optional: Remove if authentication is required
+    public IActionResult GetSalonServiceTypes()
+    {
+        var serviceTypes = Enum.GetValues(typeof(SalonServiceType))
+            .Cast<SalonServiceType>()
+            .Select(t => new
+            {
+                Id = (int)t,
+                Name = t.ToString(),
+            })
+            .ToList();
+
+        return Ok(serviceTypes);
+    }
+
 }

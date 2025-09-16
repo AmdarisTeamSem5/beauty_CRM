@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using GNT.Shared.Dtos.SalonServices;
-
+using GNT.Shared.Enums;
 
 namespace GNT.Domain.Models;
 
 public class SalonService : BaseEntity
 {
     public Guid SalonId { get; set; }
+    public SalonServiceType Type { get; set; }
     public Guid SpecialistId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
