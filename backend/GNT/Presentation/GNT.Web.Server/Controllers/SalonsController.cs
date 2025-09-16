@@ -17,6 +17,7 @@ public class SalonController : BaseController
     [HttpPost("get-all")]
     public async Task<PaginatedList<SalonDto>> GetAll([FromBody] PageQuery queryModel)
     {
+        // TODO:Modify SalonListQuery to account for ServiceType
         return await Mediator.Send(new SalonListQuery(queryModel));
     }
 

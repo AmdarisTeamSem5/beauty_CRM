@@ -8,7 +8,9 @@ public class SalonListQuery : IRequest<PaginatedList<SalonDto>>
 {
     public SalonListQuery(PageQuery pageQuery)
     {
+        // pageQuery.Filters
         PageQuery = pageQuery;
+
     }
 
     internal PageQuery PageQuery { get; set; }
