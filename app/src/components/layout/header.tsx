@@ -27,9 +27,10 @@ export default function HeaderLayout({
   secondaryButtonAction
 }: HeaderLayoutProps) {
   return (
-    <div className="w-full bg-white border-b">
+    <div className="md:-mx-42 w-screen md:px-42 bg-white border-b">
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          {" "}
           <div className="flex items-center space-x-4">
             <Avatar className="h-12 w-12">
               <AvatarImage src={avatarSrc} alt={userName} />
@@ -41,15 +42,12 @@ export default function HeaderLayout({
               <h1 className="text-xl font-semibold text-gray-900">
                 {userName}
               </h1>
-              <p className="text-sm text-gray-500">
-                {subtitle}
-              </p>
+              <p className="text-sm text-gray-500">{subtitle}</p>
             </div>
           </div>
-
           <div className="flex items-center space-x-3">
             {primaryButtonText && (
-              <Button 
+              <Button
                 className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg"
                 onClick={primaryButtonAction}
               >
@@ -58,9 +56,9 @@ export default function HeaderLayout({
               </Button>
             )}
             {secondaryButtonText && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="text-gray-600"
                 onClick={secondaryButtonAction}
               >

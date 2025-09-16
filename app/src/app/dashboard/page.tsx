@@ -1,34 +1,35 @@
 "use client";
 
-import React, { useState } from 'react';
-import HeaderLayout from '@/components/layout/header';
+import React, { useState } from "react";
+import HeaderLayout from "@/components/layout/header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
-import { Calendar, Clock, MapPin, Star, Search, Filter } from 'lucide-react';
+import { Calendar, Clock, MapPin, Star, Search, Filter } from "lucide-react";
+import { AppointmentsView } from "@/components/layout/dashboard/appointmentsView";
 
 export default function DashboardPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const statusOptions = [
     { value: "all", label: "All Status" },
     { value: "upcoming", label: "Upcoming" },
     { value: "completed", label: "Completed" },
-    { value: "cancelled", label: "Cancelled" }
+    { value: "cancelled", label: "Cancelled" },
   ];
 
   const handleBookAppointment = () => {
-    console.log('Book appointment clicked');
+    console.log("Book appointment clicked");
   };
 
   const handleProfile = () => {
-    console.log('Profile clicked');
+    console.log("Profile clicked");
   };
 
   return (
-    <div className="min-h-screen bg-[#efede8]">
-      <HeaderLayout 
+    <div className="min-h-screen">
+      <HeaderLayout
         userName="Welcome back, Sarah Johnson!"
         userInitials="SJ"
         avatarSrc="/placeholder-avatar.jpg"
@@ -38,9 +39,9 @@ export default function DashboardPage() {
         secondaryButtonText="Profile"
         secondaryButtonAction={handleProfile}
       />
-      
+
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -99,7 +100,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-4 mb-8">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
@@ -112,18 +113,20 @@ export default function DashboardPage() {
 
             <div className="h-6 w-px bg-gray-200"></div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
               <Filter className="h-4 w-4 text-gray-400" />
               <Combobox
                 options={statusOptions}
                 value={statusFilter}
-                onValueChange={setStatusFilter}  
+                onValueChange={setStatusFilter}
                 placeholder="All Status"
-                width="w-32"  
+                width="w-32"
               />
             </div>
           </div>
         </div>
+
+        <AppointmentsView />
       </div>
     </div>
   );
