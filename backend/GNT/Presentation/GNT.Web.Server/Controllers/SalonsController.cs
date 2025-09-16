@@ -4,12 +4,12 @@ using GNT.Application.Salons.Queries;
 using GNT.Shared.Dtos.Salons;
 using GNT.Shared.Dtos.Pagination;
 using GNT.Web.Server.Config;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GNT.Web.Server.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SalonController : BaseController
