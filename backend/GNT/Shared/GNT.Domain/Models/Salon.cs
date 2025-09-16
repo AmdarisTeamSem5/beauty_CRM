@@ -18,7 +18,6 @@ public class Salon : BaseEntity
     public Region Region { get; set; }
     public string Phone { get; set; }
     public string Email { get; set; }
-
 }
 public class SalonConfiguration : IEntityTypeConfiguration<Salon>
 {
