@@ -43,4 +43,5 @@ public class SalonController : BaseController
     {
         await Mediator.Send(new DeleteSalonCommand(id));
     }
+
 }
