@@ -35,39 +35,36 @@ internal class EditSalonServiceCommandHandler : RequestHandler<EditSalonServiceC
             throw new SalonServiceException(FailureCode.NotFound);
         }
 
-        // TODO:Adrian make this for SalonService
-        // if (editModel.OwnerId.HasValue)
-        // {
-        //     dbProduct.OwnerId = editModel.OwnerId.Value;
-        // }
-        // if (editModel.Name != null)
-        // {
-        //     dbProduct.Name = editModel.Name;
-        // }
-        //
-        // if (editModel.Description != null)
-        // {
-        //     dbProduct.Description = editModel.Description;
-        // }
-        //
-        // if (editModel.Address != null)
-        // {
-        //     dbProduct.Address = editModel.Address;
-        // }
-        //
-        // dbProduct.Region = editModel.Region.Value;
-        //
-        // if (editModel.Phone != null)
-        // {
-        //     dbProduct.Phone = editModel.Phone;
-        // }
-        //
-        // if (editModel.Email != null)
-        // {
-        //     dbProduct.Email = editModel.Email;
-        // }
-        //
-        //
+        if (editModel.SalonId.HasValue)
+        {
+            dbProduct.SalonId = editModel.SalonId.Value;
+        }
+        if (editModel.Name != null)
+        {
+            dbProduct.Name = editModel.Name;
+        }
+
+        if (editModel.Description != null)
+        {
+            dbProduct.Description = editModel.Description;
+        }
+
+        if (editModel.Type.HasValue)
+        {
+            dbProduct.Type = editModel.Type.Value;
+        }
+
+        dbProduct.SpecialistId = editModel.SpecialistId.Value;
+
+        if (editModel.DurationMinutes.HasValue)
+        {
+            dbProduct.DurationMinutes = editModel.DurationMinutes.Value;
+        }
+
+        if (editModel.PriceMDL.HasValue)
+        {
+            dbProduct.PriceMDL = editModel.PriceMDL.Value;
+        }
         await appDbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
