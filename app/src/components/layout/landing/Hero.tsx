@@ -1,4 +1,8 @@
+
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { JoinBeautyBookModal } from "@/components/layout/landing/joinBeatyBookModal";
 
 export function Hero() {
   return (
@@ -25,16 +29,29 @@ export function Hero() {
 
       {/* Buttons */}
       <div className="mt-6 flex justify-center gap-4">
-        <Button className="bg-purple-600 hover:bg-purple-700">Join Beauty Book</Button>
+        {/* Open modal instead of plain button */}
+        <JoinBeautyBookModal />
         <Button variant="outline">Explore Salons</Button>
       </div>
 
       {/* Stats */}
       <div className="mt-10 flex justify-center gap-10 text-purple-600 font-semibold">
-        <div><span className="text-xl">2,500+</span><p className="text-gray-600 text-sm">Active Salons</p></div>
-        <div><span className="text-xl">150K+</span><p className="text-gray-600 text-sm">Monthly Bookings</p></div>
-        <div><span className="text-xl">4.9⭐</span><p className="text-gray-600 text-sm">Customer Rating</p></div>
-        <div><span className="text-xl">50+</span><p className="text-gray-600 text-sm">Cities Covered</p></div>
+        <div>
+          <span className="text-xl">2,500+</span>
+          <p className="text-gray-600 text-sm">Active Salons</p>
+        </div>
+        <div>
+          <span className="text-xl">150K+</span>
+          <p className="text-gray-600 text-sm">Monthly Bookings</p>
+        </div>
+        <div>
+          <span className="text-xl">4.9⭐</span>
+          <p className="text-gray-600 text-sm">Customer Rating</p>
+        </div>
+        <div>
+          <span className="text-xl">50+</span>
+          <p className="text-gray-600 text-sm">Cities Covered</p>
+        </div>
       </div>
     </section>
   );
