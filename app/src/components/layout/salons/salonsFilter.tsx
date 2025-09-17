@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ServicesFilter } from "./servicesFilter";
 import { PriceRangeFilter } from "./priceRangeFilter";
+import { RatingFilter } from "./ratingFilter";
+import { DistanceFilter } from "./distanceFilter";
+import { OtherFilter } from "./otherFilter";
 import { useFilters } from "@/hooks/useFilters";
 import { fetchSalons } from "@/lib/api";
 
@@ -37,7 +40,6 @@ const SalonsFilters = () => {
           open ? "block" : "hidden"
         } lg:block`}
       >
-        {" "}
         <CardHeader className="pb-4">
           <div className="flex justify-between items-center">
             <CardTitle className="text-lg font-semibold">Filters</CardTitle>
@@ -64,6 +66,9 @@ const SalonsFilters = () => {
         <CardContent className="space-y-6">
           <ServicesFilter filters={filters} />
           <PriceRangeFilter filters={filters} />
+          <RatingFilter filters={filters} />
+          <DistanceFilter filters={filters} />
+          <OtherFilter filters={filters} />
         </CardContent>
       </Card>
     </>
