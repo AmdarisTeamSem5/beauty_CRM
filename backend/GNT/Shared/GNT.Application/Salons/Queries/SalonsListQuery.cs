@@ -1,17 +1,19 @@
 ﻿using GNT.Domain.Models;
 using GNT.Shared.Dtos.Salons;
 using GNT.Shared.Dtos.Pagination;
-
+using GNT.Shared.Enums;
 namespace GNT.Application.Salons.Queries;
 
 public class SalonListQuery : IRequest<PaginatedList<SalonDto>>
 {
-    public SalonListQuery(PageQuery pageQuery)
+    public SalonListQuery(PageQuery pageQuery, string? salonServiceTypes = null)
     {
         PageQuery = pageQuery;
+        SalonServiceTypes = salonServiceTypes;
     }
 
     internal PageQuery PageQuery { get; set; }
+    public string? SalonServiceTypes { get; set; }
 }
 
 internal class SalonListQueryHandler : RequestHandler<SalonListQuery, PaginatedList<SalonDto>>
@@ -25,6 +27,24 @@ internal class SalonListQueryHandler : RequestHandler<SalonListQuery, PaginatedL
     public override async Task<PaginatedList<SalonDto>> Handle(SalonListQuery request, CancellationToken cancellationToken)
     {
         var query = appDbContext.Salon.AsQueryable();
+
+        // Apply service types filter if provided
+        if (!string.IsNullOrEmpty(request.SalonServiceTypes))
+        {
+            var serviceTypeIds = request.SalonServiceTypes
+                .Split(',')
+                .Select(x => (SalonServiceType)int.Parse(x.Trim()))
+                .ToList();
+
+            query = query
+                .Join(appDbContext.SalonService,
+                    s => s.Id,
+                    ss => ss.SalonId,
+                    (s, ss) => new { Salon = s, SalonService = ss })
+                .Where(joined => serviceTypeIds.Contains(joined.SalonService.Type))
+                .Select(joined => joined.Salon)
+                .Distinct();
+        }
 
         var page = await paginationService.PaginatedResults(query, request.PageQuery, SalonMapping.DtoProjection);
 

@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using GNT.Shared.Dtos.SalonServices;
-
+using GNT.Shared.Enums;
 
 namespace GNT.Domain.Models;
 
 public class SalonService : BaseEntity
 {
     public Guid SalonId { get; set; }
+    public SalonServiceType Type { get; set; }
     public Guid SpecialistId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -34,14 +35,13 @@ public static class SalonServiceMapping
             return d => new SalonServiceDto
             {
                 Id = d.Id,
-                // TODO:Adrian same as bellow
-                // OwnerId = d.OwnerId,
-                // Name = d.Name,
-                // Description = d.Description,
-                // Address = d.Address,
-                // Region = d.Region,
-                // Phone = d.Phone,
-                // Email = d.Email,
+                SalonId = d.SalonId,
+                Name = d.Name,
+                Description = d.Description,
+                Type = d.Type,
+                SpecialistId = d.SpecialistId,
+                DurationMinutes = d.DurationMinutes,
+                PriceMDL = d.PriceMDL,
             };
         }
     }
@@ -51,14 +51,13 @@ public static class SalonServiceMapping
         return new SalonService
         {
             Id = Guid.NewGuid(),
-            // TODO:Adrian change this to SalonService fields
-            // OwnerId = d.OwnerId,
-            // Name = d.Name,
-            // Description = d.Description,
-            // Address = d.Address,
-            // Region = d.Region,
-            // Phone = d.Phone,
-            // Email = d.Email,
+            SalonId = d.SalonId,
+            Name = d.Name,
+            Description = d.Description,
+            Type = d.Type,
+            SpecialistId = d.SpecialistId,
+            DurationMinutes = d.DurationMinutes,
+            PriceMDL = d.PriceMDL,
         };
     }
 }
