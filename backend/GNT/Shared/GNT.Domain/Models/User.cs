@@ -16,15 +16,14 @@ public class User : BaseEntity
     public string Email { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-
     public string Password { get; set; }
-
     public bool IsBlocked { get; set; }
-    public DateTime? UnblockDate { get; set; }
-
+    public string PhoneNumber { get; set; } 
 
     public virtual ICollection<UserSecurityCode> UserSecurityCodes { get; set; }
     public virtual ICollection<UserRole> UserRoles { get; set; }
+    public ICollection<Salon> Salons { get; set; } = new List<Salon>();
+
 }
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
@@ -47,6 +46,7 @@ public static class UserMapping
                 Email = d.Email,
                 FirstName = d.FirstName,
                 LastName = d.LastName,
+                PhoneNumber = d.PhoneNumber,
                 IsBlocked = d.IsBlocked,
             };
         }

@@ -40,7 +40,6 @@ public class SendTwoFacttorCodeCommandHandler : RequestHandler<SendTwoFactorCode
         }
 
         dbUser.ValidatePassword(request.Password);
-        dbUser.ValidateStatus();
         dbUser.GenerateUserSecurityCode(SecurityCodeTypes.TwoFactorAuthentication);
 
         await appDbContext.SaveChangesAsync(cancellationToken);

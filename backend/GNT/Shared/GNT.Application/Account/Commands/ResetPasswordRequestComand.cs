@@ -36,7 +36,6 @@ public class ResetPasswordRequestCommandHandler : RequestHandler<ResetPasswordRe
             return Unit.Value;
         }
 
-        user.ValidateStatus();
         user.GenerateUserSecurityCode(SecurityCodeTypes.ResetPassword);
 
         await appDbContext.SaveChangesAsync(cancellationToken);

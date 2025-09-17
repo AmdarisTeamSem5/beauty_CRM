@@ -41,7 +41,7 @@ public class CreateUserCommandHandler : RequestHandler<CreateUserCommand, Guid>
 
         await appDbContext.AddAndSaveChangesAsync(newUser, cancellationToken);
 
-        SendRegistrationEmail(newUser.Email, newUser.FirstName, newUser.UserSecurityCodes.First().Code, newUser.UserSecurityCodes.First().ExpiresAt);
+        SendRegistrationEmail(newUser.Email, newUser.FirstName,newUser.UserSecurityCodes.First().Code, newUser.UserSecurityCodes.First().ExpiresAt);
 
         return newUser.Id;
     }

@@ -5,8 +5,6 @@ namespace GNT.Application.Interfaces
 {
     public interface IAppDbContext
     {
-        DbSet<BusinessProduct> BusinessProduct { get; set; }
-
         DbSet<User> User { get; set; }
         DbSet<UserRole> UserRole { get; set; }
         DbSet<UserSecurityCode> UserSecurityCode { get; set; }

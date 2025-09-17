@@ -61,8 +61,6 @@ namespace GNT.Infrastructure
                         Email = "claudiugeanta@gmail.com",
                         FirstName = "Cvu",
                         LastName = "Template",
-                        CreatedAt = new DateTime(2018, 1, 1),
-                        LastUpdatedAt = new DateTime(2018, 1, 1),
                         //Parola11a#
                         Password = "Ad+PeWsjpYteZQB4As2eTX+Rsd9WT1aYslx0jAJtcT1K0a5M6LSUl2NPeWVYihAxoA==",
                         UserRoles = new[] { new UserRole() { Role = adminRole } }
@@ -71,14 +69,6 @@ namespace GNT.Infrastructure
 
                     appDbContext.Role.AddRange(adminRole, userRole);
                     appDbContext.User.AddRange(admin);
-
-                }
-
-                if (appDbContext.BusinessProduct.Count() == 0)
-                {
-                    var products = SeedProducts(500);
-
-                    appDbContext.AddRange(products);
 
                 }
 
@@ -120,6 +110,7 @@ namespace GNT.Infrastructure
             }
         }
 
+<<<<<<< Updated upstream
         private static List<Salon> SeedSalons(int count = 10)
         {
             var salons = new List<Salon>();
@@ -166,5 +157,7 @@ namespace GNT.Infrastructure
 
             return products;
         }
+=======
+>>>>>>> Stashed changes
     }
 }

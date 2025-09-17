@@ -26,8 +26,6 @@ public class AppDbContext : DbContext, IAppDbContext
         this.session = session;
     }
 
-    public virtual DbSet<BusinessProduct> BusinessProduct { get; set; }
-
     public virtual DbSet<User> User { get; set; }
     public virtual DbSet<UserRole> UserRole { get; set; }
     public virtual DbSet<UserSecurityCode> UserSecurityCode { get; set; }
@@ -55,7 +53,16 @@ public class AppDbContext : DbContext, IAppDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Role).Assembly);
+
+        modelBuilder.Entity<Salon>()
+            .HasOne(s => s.Owner)        
+            .WithMany(u => u.Salons)    
+            .HasForeignKey(s => s.OwnerId)
+            .OnDelete(DeleteBehavior.Restrict); 
+
+        base.OnModelCreating(modelBuilder); 
     }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -65,19 +72,6 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         var entries = ChangeTracker.Entries<BaseEntity>();
 
-        foreach (var entry in entries)
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedAt = DateTime.UtcNow;
-                entry.Entity.CreatedById = session.CurrentUser.Id;
-            }
-
-            if (entry.State == EntityState.Modified && session.CurrentUser.IsAuthenticated)
-            {
-                entry.Entity.LastUpdatedAt = DateTime.UtcNow;
-                entry.Entity.LastUpdatedById = session.CurrentUser.Id;
-            }
-        }
+    
     }
 }
