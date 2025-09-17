@@ -8,7 +8,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <header className="w-screen border-b bg-white/80 backdrop-blur-md sticky top-0 z-50 -mx-42">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         
         {/* Logo */}

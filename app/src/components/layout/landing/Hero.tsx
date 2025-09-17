@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="text-center py-20 bg-neutral-50">
+    <section className="text-center py-20 bg-neutral-50 -mx-42 w-screen">
       <p className="text-sm text-purple-600 font-medium">⭐ Trusted by 2,500+ Salons</p>
       <h1 className="text-4xl md:text-5xl font-bold mt-4">
         <span className="text-purple-600">Discover & Book</span> <br />

@@ -6,7 +6,7 @@ const steps = [
   
   export function Steps() {
     return (
-      <section className="py-20 bg-purple-50 text-center">
+      <section className="py-20 bg-purple-50 text-center w-screen -mx-42">
         <h2 className="text-3xl font-bold">Get Started in <span className="text-purple-600">3 Simple Steps</span></h2>
         <div className="grid md:grid-cols-3 gap-6 mt-10 max-w-4xl mx-auto">
           {steps.map((s) => (
