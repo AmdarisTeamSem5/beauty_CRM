@@ -40,3 +40,4 @@ public class FilterDefinition()
     public string Condition { get; set; }
     public string Value { get; set; }
 }
+

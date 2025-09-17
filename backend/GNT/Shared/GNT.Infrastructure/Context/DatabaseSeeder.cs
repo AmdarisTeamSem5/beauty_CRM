@@ -79,11 +79,66 @@ namespace GNT.Infrastructure
                     var products = SeedProducts(500);
 
                     appDbContext.AddRange(products);
+
                 }
+
+                if (appDbContext.Salon.Count() == 0)
+                {
+                    List<Salon> salons = salons = SeedSalons(10);
+
+                    appDbContext.AddRange(salons);
+                }
+
+                if (appDbContext.SalonService.Count() == 0)
+                {
+                    var salons = appDbContext.Salon;
+                    foreach (var salon in salons)
+                    {
+                        var salon_services = new List<SalonService>();
+
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            salon_services.Add(new SalonService
+                            {
+                                Id = Guid.NewGuid(),
+                                SalonId = salon.Id,
+                                Type = (SalonServiceType)(i * 10),
+                                SpecialistId = Guid.NewGuid(),
+                                Name = $"Dummy_service_{i}_for_{salon}",
+                                Description = $"Dummy description for service {(SalonServiceType)(i * 10)}",
+                                DurationMinutes = i,
+                                PriceMDL = i * 50,
+                            });
+                        }
+
+                        appDbContext.AddRange(salon_services);
+                    }
+                }
+
 
                 appDbContext.SaveChanges();
             }
         }
+
+        private static List<Salon> SeedSalons(int count = 10)
+        {
+            var salons = new List<Salon>();
+            for (int i = 1; i <= count; i++)
+            {
+                salons.Add(new Salon
+                {
+                    OwnerId = Guid.NewGuid(),
+                    Name = $"DummySalone_{i}",
+                    Description = $"This is the {i}_th dummy salone",
+                    Address = "",
+                    Region = (Region)(i % 5),
+                    Phone = "",
+                    Email = ""
+                });
+            }
+            return salons;
+        }
+
 
         private static List<BusinessProduct> SeedProducts(int count = 100)
         {
