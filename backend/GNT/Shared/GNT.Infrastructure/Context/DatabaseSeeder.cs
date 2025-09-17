@@ -110,7 +110,6 @@ namespace GNT.Infrastructure
             }
         }
 
-<<<<<<< Updated upstream
         private static List<Salon> SeedSalons(int count = 10)
         {
             var salons = new List<Salon>();
@@ -131,33 +130,6 @@ namespace GNT.Infrastructure
         }
 
 
-        private static List<BusinessProduct> SeedProducts(int count = 100)
-        {
-            var products = new List<BusinessProduct>();
-            var random = new Random();
-            var types = Enum.GetValues(typeof(BusinessProductType));
-
-            for (int i = 1; i <= count; i++)
-            {
-                var dateIn = DateTime.Today.AddDays(-random.Next(1, 365));
-                var dateOut = dateIn.AddDays(random.Next(1, 100));
-
-                var product = new BusinessProduct
-                {
-                    Name = $"Product {i}",
-                    Price = Math.Round((decimal)(random.NextDouble() * 1000), 2),
-                    Type = (BusinessProductType)types.GetValue(random.Next(types.Length)),
-                    IsInStock = random.Next(2) == 1,
-                    DatetIn = dateIn,
-                    DateOut = dateOut
-                };
-
-                products.Add(product);
-            }
-
-            return products;
-        }
-=======
->>>>>>> Stashed changes
+       
     }
 }
