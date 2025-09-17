@@ -37,7 +37,7 @@ namespace GNT.Application
             services.AddScoped<Interfaces.ISession, Session>();
 
 
-            services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
+           // services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
             services.AddMediatR(o => o.RegisterServicesFromAssemblies(typeof(LoginCommand).Assembly));
  
             services.AddJwt(configuration);

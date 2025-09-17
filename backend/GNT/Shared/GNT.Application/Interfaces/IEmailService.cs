@@ -1,4 +1,4 @@
-namespace GNT.Application.Interfaces;
+/*namespace GNT.Application.Interfaces;
 
 public interface IEmailService
 {
@@ -20,3 +20,4 @@ public interface IEmailService
 
     Task<IEmailService> QuickSendAsync(string subject, string body, string to);
 }
+*/

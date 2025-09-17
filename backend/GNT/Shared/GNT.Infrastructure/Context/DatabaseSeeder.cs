@@ -72,12 +72,13 @@ namespace GNT.Infrastructure
 
                 }
 
-                if (appDbContext.Salon.Count() == 0)
+               /* if (appDbContext.Salon.Count() == 0)
                 {
                     List<Salon> salons = salons = SeedSalons(10);
 
                     appDbContext.AddRange(salons);
-                }
+                }*/
+
 
                 if (appDbContext.SalonService.Count() == 0)
                 {
@@ -110,26 +111,10 @@ namespace GNT.Infrastructure
             }
         }
 
-        private static List<Salon> SeedSalons(int count = 10)
-        {
-            var salons = new List<Salon>();
-            for (int i = 1; i <= count; i++)
-            {
-                salons.Add(new Salon
-                {
-                    OwnerId = Guid.NewGuid(),
-                    Name = $"DummySalone_{i}",
-                    Description = $"This is the {i}_th dummy salone",
-                    Address = "",
-                    Region = (Region)(i % 5),
-                    Phone = "",
-                    Email = ""
-                });
-            }
-            return salons;
-        }
+
+ 
 
 
-       
+
     }
 }
