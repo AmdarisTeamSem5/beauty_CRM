@@ -20,11 +20,11 @@ public class ResetPasswordRequestCommand : IRequest<Unit>
 
 public class ResetPasswordRequestCommandHandler : RequestHandler<ResetPasswordRequestCommand, Unit>
 {
-    private readonly IEmailService EmailService;
+   // private readonly IEmailService EmailService;
 
-    public ResetPasswordRequestCommandHandler(IServiceProvider serviceProvider, IEmailService emailService) : base(serviceProvider)
+    public ResetPasswordRequestCommandHandler(IServiceProvider serviceProvider /*IEmailService emailService*/) : base(serviceProvider)
     {
-        EmailService = emailService;
+        //EmailService = emailService;
     }
 
     public override async Task<Unit> Handle(ResetPasswordRequestCommand request, CancellationToken cancellationToken)
@@ -36,7 +36,6 @@ public class ResetPasswordRequestCommandHandler : RequestHandler<ResetPasswordRe
             return Unit.Value;
         }
 
-        user.ValidateStatus();
         user.GenerateUserSecurityCode(SecurityCodeTypes.ResetPassword);
 
         await appDbContext.SaveChangesAsync(cancellationToken);
@@ -59,6 +58,6 @@ public class ResetPasswordRequestCommandHandler : RequestHandler<ResetPasswordRe
             .Replace("{SecurityCode}", securityCode)
             .Replace("{FirstName}", firstName);
 
-        EmailService.QuickSendAsync(subject: "Reset Your Password", body: template, to: email);
+        //EmailService.QuickSendAsync(subject: "Reset Your Password", body: template, to: email);
     }
 }

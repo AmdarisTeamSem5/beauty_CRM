@@ -45,7 +45,6 @@ public class LoginCommandHandler : RequestHandler<LoginCommand, TokenDto>
         }
 
         dbUser.ValidatePassword(request.Password);
-        dbUser.ValidateStatus();
 
         var failureReason = dbUser.ValidateUserSecurityCode(request.SecurityCode);
 

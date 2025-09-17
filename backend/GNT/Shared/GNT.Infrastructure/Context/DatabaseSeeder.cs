@@ -61,8 +61,6 @@ namespace GNT.Infrastructure
                         Email = "claudiugeanta@gmail.com",
                         FirstName = "Cvu",
                         LastName = "Template",
-                        CreatedAt = new DateTime(2018, 1, 1),
-                        LastUpdatedAt = new DateTime(2018, 1, 1),
                         //Parola11a#
                         Password = "Ad+PeWsjpYteZQB4As2eTX+Rsd9WT1aYslx0jAJtcT1K0a5M6LSUl2NPeWVYihAxoA==",
                         UserRoles = new[] { new UserRole() { Role = adminRole } }
@@ -74,20 +72,13 @@ namespace GNT.Infrastructure
 
                 }
 
-                if (appDbContext.BusinessProduct.Count() == 0)
-                {
-                    var products = SeedProducts(500);
-
-                    appDbContext.AddRange(products);
-
-                }
-
-                if (appDbContext.Salon.Count() == 0)
+               /* if (appDbContext.Salon.Count() == 0)
                 {
                     List<Salon> salons = salons = SeedSalons(10);
 
                     appDbContext.AddRange(salons);
-                }
+                }*/
+
 
                 if (appDbContext.SalonService.Count() == 0)
                 {
@@ -120,51 +111,10 @@ namespace GNT.Infrastructure
             }
         }
 
-        private static List<Salon> SeedSalons(int count = 10)
-        {
-            var salons = new List<Salon>();
-            for (int i = 1; i <= count; i++)
-            {
-                salons.Add(new Salon
-                {
-                    OwnerId = Guid.NewGuid(),
-                    Name = $"DummySalone_{i}",
-                    Description = $"This is the {i}_th dummy salone",
-                    Address = "",
-                    Region = (Region)(i % 5),
-                    Phone = "",
-                    Email = ""
-                });
-            }
-            return salons;
-        }
+
+ 
 
 
-        private static List<BusinessProduct> SeedProducts(int count = 100)
-        {
-            var products = new List<BusinessProduct>();
-            var random = new Random();
-            var types = Enum.GetValues(typeof(BusinessProductType));
 
-            for (int i = 1; i <= count; i++)
-            {
-                var dateIn = DateTime.Today.AddDays(-random.Next(1, 365));
-                var dateOut = dateIn.AddDays(random.Next(1, 100));
-
-                var product = new BusinessProduct
-                {
-                    Name = $"Product {i}",
-                    Price = Math.Round((decimal)(random.NextDouble() * 1000), 2),
-                    Type = (BusinessProductType)types.GetValue(random.Next(types.Length)),
-                    IsInStock = random.Next(2) == 1,
-                    DatetIn = dateIn,
-                    DateOut = dateOut
-                };
-
-                products.Add(product);
-            }
-
-            return products;
-        }
     }
 }

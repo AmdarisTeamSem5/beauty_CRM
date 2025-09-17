@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GNT.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class UserSalonFK : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace GNT.Infrastructure.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false),
-                    UnblockDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -37,37 +37,6 @@ namespace GNT.Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_User_User_LastUpdatedById",
-                        column: x => x.LastUpdatedById,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BusinessProduct",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    IsInStock = table.Column<bool>(type: "bit", nullable: false),
-                    DatetIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateOut = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BusinessProduct", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BusinessProduct_User_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_BusinessProduct_User_LastUpdatedById",
                         column: x => x.LastUpdatedById,
                         principalTable: "User",
                         principalColumn: "Id");
@@ -96,6 +65,76 @@ namespace GNT.Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Role_User_LastUpdatedById",
+                        column: x => x.LastUpdatedById,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Salon",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Region = table.Column<int>(type: "int", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salon", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salon_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Salon_User_LastUpdatedById",
+                        column: x => x.LastUpdatedById,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Salon_User_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SalonService",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SalonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SpecialistId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
+                    PriceMDL = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalonService", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SalonService_User_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SalonService_User_LastUpdatedById",
                         column: x => x.LastUpdatedById,
                         principalTable: "User",
                         principalColumn: "Id");
@@ -168,16 +207,6 @@ namespace GNT.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessProduct_CreatedById",
-                table: "BusinessProduct",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BusinessProduct_LastUpdatedById",
-                table: "BusinessProduct",
-                column: "LastUpdatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Role_CreatedById",
                 table: "Role",
                 column: "CreatedById");
@@ -185,6 +214,31 @@ namespace GNT.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Role_LastUpdatedById",
                 table: "Role",
+                column: "LastUpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salon_CreatedById",
+                table: "Salon",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salon_LastUpdatedById",
+                table: "Salon",
+                column: "LastUpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salon_OwnerId",
+                table: "Salon",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalonService_CreatedById",
+                table: "SalonService",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalonService_LastUpdatedById",
+                table: "SalonService",
                 column: "LastUpdatedById");
 
             migrationBuilder.CreateIndex(
@@ -217,10 +271,13 @@ namespace GNT.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BusinessProduct");
+                name: "RolePermission");
 
             migrationBuilder.DropTable(
-                name: "RolePermission");
+                name: "Salon");
+
+            migrationBuilder.DropTable(
+                name: "SalonService");
 
             migrationBuilder.DropTable(
                 name: "UserRole");

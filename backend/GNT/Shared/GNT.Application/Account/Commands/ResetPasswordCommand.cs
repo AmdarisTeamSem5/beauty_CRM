@@ -33,8 +33,6 @@ public class ResetPasswordCommandHandler : RequestHandler<ResetPasswordCommand, 
             .Include(d => d.UserSecurityCodes.Where(d => d.Type == SecurityCodeTypes.ResetPassword).OrderByDescending(d => d.CreatedAt).Take(1))
             .FirstOrDefault();
 
-        dbUser.ValidateStatus();
-
         var failureReason = dbUser.ValidateUserSecurityCode(request.Model.SecurityCode);
 
         await appDbContext.SaveChangesAsync(cancellationToken);
