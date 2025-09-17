@@ -27,7 +27,6 @@ namespace GNT.Application
         public async Task<PaginatedList<TDestination>> PaginatedResults<TSource, TDestination>(IQueryable<TSource> query, PageQuery pagedQuery, Expression<Func<TSource, TDestination>> MappingRule)
         {
             var count = query.Count();
-            // TODO:Adrian test so this works properly
             var projectedQuery = query.Select(MappingRule);
 
             if (pagedQuery.SortBy.Any())

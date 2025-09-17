@@ -1,9 +1,11 @@
 
 using GNT.Application.Salons.Commands;
 using GNT.Application.Salons.Queries;
-using GNT.Shared.Dtos.Salons;
 using GNT.Shared.Dtos.Pagination;
+using GNT.Shared.Dtos.Salons;
+using GNT.Shared.Enums;
 using GNT.Web.Server.Config;
+using Microsoft.AspNetCore.Authorization;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,5 +47,6 @@ public class SalonController : BaseController
     {
         await Mediator.Send(new DeleteSalonCommand(id));
     }
+
 
 }
