@@ -13,4 +13,8 @@ obj/
 *.suo
 *.userosscache
 *.sln.docstates
+appsettings.json
 
+
+# 
+GNT/Shared/GNT.Infrastructure/Migrations/

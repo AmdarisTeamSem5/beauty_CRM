@@ -9,7 +9,7 @@ namespace GNT.Infrastructure.Context
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=CRM_Salons_DB;Trusted_Connection=True;TrustServerCertificate=True;"
+    "Data Source=.\\sqlexpress;Initial Catalog=CRM_Salons_DB;Integrated Security=SSPI;Persist Security Info=True;TrustServerCertificate=True;"
             );
 
             return new AppDbContext(optionsBuilder.Options);
