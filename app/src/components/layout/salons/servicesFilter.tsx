@@ -1,5 +1,7 @@
 "use client";
+import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { useFilters } from "@/hooks/useFilters";
 
 const services = [
@@ -14,6 +16,8 @@ const services = [
 ];
 
 export const ServicesFilter = ({ filters }: { filters: ReturnType<typeof useFilters> }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
   const toggleService = (service: string) => {
     if (filters.services.includes(service)) {
       filters.setServices(filters.services.filter((s) => s !== service));
@@ -23,20 +27,33 @@ export const ServicesFilter = ({ filters }: { filters: ReturnType<typeof useFilt
   };
 
   return (
-    <div>
-      <h3 className="text-sm font-semibold mb-2">Services</h3>
-      <div className="space-y-2">
-        {services.map((service) => (
-          <label key={service.label} className="flex items-center gap-2">
-            <Checkbox
-              checked={filters.services.includes(service.label)}
-              onCheckedChange={() => toggleService(service.label)}
-            />
-            <span className="flex-1">{service.label}</span>
-            <span className="text-gray-500 text-sm">{service.count}</span>
-          </label>
-        ))}
+    <div className="space-y-3">
+      <div
+        className="flex items-center justify-between cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h3 className="text-sm font-semibold">Services</h3>
+        {isOpen ? (
+          <ChevronUp className="h-4 w-4 text-gray-500" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-gray-500" />
+        )}
       </div>
+
+      {isOpen && (
+        <div className="space-y-2 pt-2">
+          {services.map((service) => (
+            <label key={service.label} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.services.includes(service.label)}
+                onCheckedChange={() => toggleService(service.label)}
+              />
+              <span className="flex-1 text-sm">{service.label}</span>
+              <span className="text-gray-500 text-sm">{service.count}</span>
+            </label>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
