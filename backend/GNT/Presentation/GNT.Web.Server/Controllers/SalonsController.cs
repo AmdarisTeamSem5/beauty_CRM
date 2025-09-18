@@ -16,10 +16,14 @@ namespace GNT.Web.Server.Controllers;
 [Route("api/[controller]")]
 public class SalonController : BaseController
 {
-    [HttpPost("get-all")]
-    public async Task<PaginatedList<SalonDto>> GetAll([FromBody] PageQuery queryModel)
-    {
 
+    [HttpGet]
+    public async Task<PaginatedList<SalonDto>> FilterAll([FromBody] PageQuery queryModel)
+    {
+        if (queryModel == null)
+        {
+            queryModel = new PageQuery();
+        }
         var serviceTypes = queryModel.Filters.FirstOrDefault(f => f.PropertyName == "ServiceTypes")?.Value;
         return await Mediator.Send(new SalonListQuery(queryModel, serviceTypes));
     }

@@ -15,9 +15,13 @@ namespace GNT.Web.Server;
 public class UserController : BaseController
 {
 
-    [HttpPost("get-all")]
+    [HttpGet]
     public async Task<PaginatedList<UserDto>> GetUsers([FromBody] PageQuery queryModel)
     {
+        if (queryModel == null)
+        {
+            queryModel = new PageQuery();
+        }
         return await Mediator.Send(new UserListQuery(queryModel));
     }
 
