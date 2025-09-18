@@ -36,5 +36,7 @@ namespace GNT.Shared.Dtos.Salons
         public Region Region { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
+        public DateTime DateTime { get; set; }
+
     }
 }

@@ -18,7 +18,7 @@ namespace GNT.Infrastructure
             services.Configure<SmtpOptions>(Configuration.GetSection("Smtp"));
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IEmailService, EmailService>();
+           // services.AddTransient<IEmailService, EmailService>();
 
             return services;
         }

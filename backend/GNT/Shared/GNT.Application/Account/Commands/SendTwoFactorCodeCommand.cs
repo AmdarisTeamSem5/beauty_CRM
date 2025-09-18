@@ -21,11 +21,11 @@ public class SendTwoFactorCodeCommand : IRequest<Unit>
 
 public class SendTwoFacttorCodeCommandHandler : RequestHandler<SendTwoFactorCodeCommand, Unit>
 {
-    private readonly IEmailService emailService;
+    //private readonly IEmailService emailService;
 
-    public SendTwoFacttorCodeCommandHandler(IEmailService emailService, IServiceProvider serviceProvider) : base(serviceProvider)
+    public SendTwoFacttorCodeCommandHandler(/*IEmailService emailService,*/ IServiceProvider serviceProvider) : base(serviceProvider)
     {
-        this.emailService = emailService;
+        //this.emailService = emailService;
     }
 
     public async override Task<Unit> Handle(SendTwoFactorCodeCommand request, CancellationToken cancellationToken)
@@ -40,7 +40,6 @@ public class SendTwoFacttorCodeCommandHandler : RequestHandler<SendTwoFactorCode
         }
 
         dbUser.ValidatePassword(request.Password);
-        dbUser.ValidateStatus();
         dbUser.GenerateUserSecurityCode(SecurityCodeTypes.TwoFactorAuthentication);
 
         await appDbContext.SaveChangesAsync(cancellationToken);
@@ -66,7 +65,7 @@ public class SendTwoFacttorCodeCommandHandler : RequestHandler<SendTwoFactorCode
             .Replace("{ExpiresAt}", expiresAt)
             .Replace("{FirstName}", firstName);
 
-        emailService.QuickSendAsync(subject: "Hemis New Login Code", body: template, to: email);
+        //emailService.QuickSendAsync(subject: "Hemis New Login Code", body: template, to: email);
 
         return Task.CompletedTask;
     }

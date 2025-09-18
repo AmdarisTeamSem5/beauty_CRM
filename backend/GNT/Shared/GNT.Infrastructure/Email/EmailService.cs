@@ -1,4 +1,4 @@
-using GNT.Application.Interfaces;
+/*using GNT.Application.Interfaces;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
@@ -303,4 +303,4 @@ public sealed class EmailService : IHideObjectMembers, IDisposable, IEmailServic
 
         return message;
     }
-}
+}*/
