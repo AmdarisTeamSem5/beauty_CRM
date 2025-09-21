@@ -21,8 +21,25 @@ public class Salon : BaseEntity
     public string Email { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    //rating fields
+    public decimal Rating { get; private set; }     //avg rating  
+    public int RatingCount { get; private set; }
+
+    public void ApplyRating(int stars) //calculul pentru rating
+    {
+        if (stars < 1 || stars > 5)
+            throw new ArgumentOutOfRangeException(nameof(stars), "Stars must be 1..5");
+
+        var total = Rating * RatingCount;     
+        RatingCount++;
+        Rating = Math.Round((total + stars) / RatingCount, 2); 
+        UpdatedAt = DateTime.UtcNow;
+    }
 
 }
+
+ 
+
 public class SalonConfiguration : IEntityTypeConfiguration<Salon>
 {
     public void Configure(EntityTypeBuilder<Salon> entity)
@@ -48,7 +65,9 @@ public static class SalonMapping
                 Phone = d.Phone,
                 Email = d.Email,
                 UpdatedAt = d.UpdatedAt,
-                CreatedAt = d.CreatedAt
+                CreatedAt = d.CreatedAt,
+                Rating = d.Rating,
+                RatingCount = d.RatingCount
             };
         }
     }
@@ -65,7 +84,7 @@ public static class SalonMapping
             Region = d.Region,
             Phone = d.Phone,
             Email = d.Email,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow
         };
     }
 }

@@ -60,6 +60,7 @@ public static class UserMapping
             Email = postModel.Email,
             FirstName = postModel.FirstName,
             LastName = postModel.LastName,
+            PhoneNumber = postModel.PhoneNumber,
             IsBlocked = postModel.IsBlocked
         };
     }
