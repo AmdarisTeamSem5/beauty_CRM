@@ -13,6 +13,7 @@ namespace GNT.Shared.Dtos.Salons
         public CreateSalonDto(
             Guid ownerId,
             string name,
+            float rating,
             string description,
             string address,
             Region region,
@@ -22,6 +23,7 @@ namespace GNT.Shared.Dtos.Salons
         {
             OwnerId = ownerId;
             Name = name;
+            Rating = rating;
             Description = description;
             Address = address;
             Region = region;
@@ -31,6 +33,7 @@ namespace GNT.Shared.Dtos.Salons
 
         public Guid OwnerId { get; set; }
         public string Name { get; set; }
+        public float Rating { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
         public Region Region { get; set; }
