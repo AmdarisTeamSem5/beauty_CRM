@@ -2,18 +2,21 @@
 using GNT.Shared.Dtos.Salons;
 using GNT.Shared.Dtos.Pagination;
 using GNT.Shared.Enums;
-namespace GNT.Application.Salons.Queries;
+using System.ComponentModel.DataAnnotations;
 
+namespace GNT.Application.Salons.Queries;
 public class SalonListQuery : IRequest<PaginatedList<SalonDto>>
 {
-    public SalonListQuery(PageQuery pageQuery, string? salonServiceTypes = null)
+    public SalonListQuery(PageQuery pageQuery)
     {
         PageQuery = pageQuery;
-        SalonServiceTypes = salonServiceTypes;
+        SalonServiceTypes = pageQuery.Filters.FirstOrDefault(f => f.PropertyName == "ServiceTypes")?.Value; 
+        SalonSearch = pageQuery.Filters.FirstOrDefault(f => f.PropertyName == "Search")?.Value;   
     }
 
     internal PageQuery PageQuery { get; set; }
     public string? SalonServiceTypes { get; set; }
+    public string? SalonSearch { get; set; }
 }
 
 internal class SalonListQueryHandler : RequestHandler<SalonListQuery, PaginatedList<SalonDto>>
@@ -44,6 +47,12 @@ internal class SalonListQueryHandler : RequestHandler<SalonListQuery, PaginatedL
                 .Where(joined => serviceTypeIds.Contains(joined.SalonService.Type))
                 .Select(joined => joined.Salon)
                 .Distinct();
+        }
+
+        if (!string.IsNullOrEmpty(request.SalonServiceTypes))
+        {
+            var valid_tokens = request.SalonSearch?.Split(" ").Where(invalid_token => invalid_token != " ");
+            query = query.Where(Salons => valid_tokens.All(token => Salons.Name.Contains(token)));
         }
 
         var page = await paginationService.PaginatedResults(query, request.PageQuery, SalonMapping.DtoProjection);
