@@ -18,14 +18,31 @@ namespace GNT.Web.Server.Controllers;
 [Route("api/[controller]")]
 public class SalonController : BaseController
 {
-    [HttpPost("get-all")]
-    public async Task<PaginatedList<SalonDto>> GetAll([FromBody] PageQuery queryModel)
+ 
+
+    [HttpGet] 
+    public async Task<ActionResult<List<SalonDto>>> GetAll(
+    [FromQuery] PriceBand? band,
+    [FromQuery] bool excludeSalonsWithNoServices = false,
+    [FromQuery] string? orderBy = null,
+    [FromQuery] bool desc = false,
+    [FromQuery] Guid? ownerId = null,        
+
+    CancellationToken ct = default)
     {
+        var result = await Mediator.Send(new GetAllSalonsQuery
+        {
+            Band = band,
+            ExcludeSalonsWithNoServices = excludeSalonsWithNoServices,
+            OrderBy = orderBy,
+            Desc = desc
+        }, ct);
 
-        return await Mediator.Send(new SalonListQuery(queryModel));
+        return Ok(result);
     }
+  
 
-    [HttpGet("{id}")]
+        [HttpGet("{id}")]
     public async Task<SalonDto> Get([FromRoute] Guid id)
     {
         return await Mediator.Send(new SalonQuery(id));
@@ -49,16 +66,7 @@ public class SalonController : BaseController
         await Mediator.Send(new DeleteSalonCommand(id));
     }
 
-    [HttpGet("by-price")]
-    [ProducesResponseType(typeof(List<SalonPriceSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<SalonPriceSummaryDto>>> GetByPrice(
-         [FromQuery] PriceBandOptionDto options,
-         CancellationToken ct)
-    {
-        var result = await Mediator.Send(new FilterSalonsByPriceQuery(options), ct);
-        return Ok(result);
-    }
-
+  
 
 
 }

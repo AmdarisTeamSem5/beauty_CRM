@@ -15,7 +15,5 @@ public class SalonDto
     public string Email { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    public decimal Rating { get; set; }
-    public int RatingCount { get; set; }
 
 }

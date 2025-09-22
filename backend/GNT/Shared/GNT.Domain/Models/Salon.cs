@@ -22,20 +22,9 @@ public class Salon : BaseEntity
     public string Email { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    //rating fields
-    public decimal Rating { get; set; }     //avg rating  
-    public int RatingCount { get; set; }
 
-    public void ApplyRating(int stars) //calculul pentru rating
-    {
-        if (stars < 1 || stars > 5)
-            throw new ArgumentOutOfRangeException(nameof(stars), "Stars must be 1..5");
 
-        var total = Rating * RatingCount;     
-        RatingCount++;
-        Rating = Math.Round((total + stars) / RatingCount, 2); 
-        UpdatedAt = DateTime.UtcNow;
-    }
+  
 
 }
 
@@ -68,8 +57,6 @@ public static class SalonMapping
                 Email = d.Email,
                 UpdatedAt = d.UpdatedAt,
                 CreatedAt = d.CreatedAt,
-                Rating = d.Rating,
-                RatingCount = d.RatingCount
             };
         }
     }
@@ -88,7 +75,6 @@ public static class SalonMapping
             Phone = d.Phone,
             Email = d.Email,
             CreatedAt = DateTime.UtcNow,
-            RatingCount = d.RatingCount
         };
     }
 }
