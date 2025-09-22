@@ -2,6 +2,8 @@
 using GNT.Application.Salons.Commands;
 using GNT.Application.Salons.Queries;
 using GNT.Shared.Dtos.Pagination;
+using GNT.Shared.Dtos.PriceBandOptions;
+using GNT.Shared.Dtos.Pricing;
 using GNT.Shared.Dtos.Salons;
 using GNT.Shared.Enums;
 using GNT.Web.Server.Config;
@@ -47,6 +49,17 @@ public class SalonController : BaseController
     {
         await Mediator.Send(new DeleteSalonCommand(id));
     }
+
+    [HttpGet("by-price")]
+    [ProducesResponseType(typeof(List<SalonPriceSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalonPriceSummaryDto>>> GetByPrice(
+         [FromQuery] PriceBandOptionDto options,
+         CancellationToken ct)
+    {
+        var result = await Mediator.Send(new FilterSalonsByPriceQuery(options), ct);
+        return Ok(result);
+    }
+
 
 
 }
