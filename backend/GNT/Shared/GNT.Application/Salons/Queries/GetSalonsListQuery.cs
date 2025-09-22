@@ -49,7 +49,7 @@ internal class SalonListQueryHandler : RequestHandler<SalonListQuery, PaginatedL
                 .Distinct();
         }
 
-        if (!string.IsNullOrEmpty(request.SalonServiceTypes))
+        if (!string.IsNullOrEmpty(request.SalonSearch))
         {
             var valid_tokens = request.SalonSearch?.Split(" ").Where(invalid_token => invalid_token != " ");
             query = query.Where(Salons => valid_tokens.All(token => Salons.Name.Contains(token))).OrderBy(salon => salon.Id).Distinct();
