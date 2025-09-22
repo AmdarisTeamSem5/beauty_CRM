@@ -49,8 +49,8 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-500 mb-1">Upcoming</p>
                   <p className="text-3xl font-bold text-gray-900">2</p>
                 </div>
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <Calendar className="h-6 w-6 text-pink-500" />
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <Calendar className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
             </CardContent>
@@ -63,8 +63,8 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-500 mb-1">Completed</p>
                   <p className="text-3xl font-bold text-gray-900">3</p>
                 </div>
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <Clock className="h-6 w-6 text-pink-500" />
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <Clock className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
             </CardContent>
@@ -77,8 +77,8 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-500 mb-1">Favorite Salons</p>
                   <p className="text-3xl font-bold text-gray-900">5</p>
                 </div>
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <MapPin className="h-6 w-6 text-pink-500" />
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <MapPin className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
             </CardContent>
@@ -91,8 +91,8 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-500 mb-1">Avg Rating</p>
                   <p className="text-3xl font-bold text-gray-900">4.8</p>
                 </div>
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <Star className="h-6 w-6 text-pink-500" />
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <Star className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
             </CardContent>
