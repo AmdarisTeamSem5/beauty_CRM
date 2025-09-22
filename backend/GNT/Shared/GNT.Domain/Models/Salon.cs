@@ -22,8 +22,8 @@ public class Salon : BaseEntity
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     //rating fields
-    public decimal Rating { get; private set; }     //avg rating  
-    public int RatingCount { get; private set; }
+    public decimal Rating { get; set; }     //avg rating  
+    public int RatingCount { get; set; }
 
     public void ApplyRating(int stars) //calculul pentru rating
     {
@@ -84,7 +84,8 @@ public static class SalonMapping
             Region = d.Region,
             Phone = d.Phone,
             Email = d.Email,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            RatingCount = d.RatingCount
         };
     }
 }

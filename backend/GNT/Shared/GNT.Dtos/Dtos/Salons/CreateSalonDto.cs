@@ -17,7 +17,8 @@ namespace GNT.Shared.Dtos.Salons
             string address,
             Region region,
             string phone,
-            string email
+            string email,
+            int ratingCount
                 )
         {
             OwnerId = ownerId;
@@ -27,6 +28,7 @@ namespace GNT.Shared.Dtos.Salons
             Region = region;
             Phone = phone;
             Email = email;
+            RatingCount = ratingCount;
         }
 
         public Guid OwnerId { get; set; }
@@ -37,6 +39,8 @@ namespace GNT.Shared.Dtos.Salons
         public string Phone { get; set; }
         public string Email { get; set; }
         public DateTime DateTime { get; set; }
+        public int RatingCount { get; set; }
+
 
     }
 }
