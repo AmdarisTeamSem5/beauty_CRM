@@ -1,22 +1,49 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useFilters } from "@/hooks/useFilters";
 
-const services = [
-  { label: "Hair Services", count: 89 },
-  { label: "Nail Services", count: 67 },
-  { label: "Skincare & Facials", count: 45 },
-  { label: "Massage Therapy", count: 34 },
-  { label: "Lash Extensions", count: 28 },
-  { label: "Eyebrow Services", count: 31 },
-  { label: "Waxing", count: 23 },
-  { label: "Makeup Services", count: 19 },
-];
 
-export const ServicesFilter = ({ filters }: { filters: ReturnType<typeof useFilters> }) => {
+type ServiceType = {
+  id: number;
+  name: string;
+};
+
+export const ServicesFilter = ({
+  filters,
+}: {
+  filters: ReturnType<typeof useFilters>;
+}) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [services, setServices] = useState<ServiceType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch("http://localhost:5191/api/Misc/ServiceTypes");
+        if (!res.ok) throw new Error("Failed to fetch services");
+        let data: ServiceType[] = await res.json();
+
+        data = data
+          .map((s) => ({
+            ...s,
+            name: s.name.replace(/([a-z])([A-Z])/g, "$1 $2"),
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        setServices(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   const toggleService = (service: string) => {
     if (filters.services.includes(service)) {
@@ -25,6 +52,8 @@ export const ServicesFilter = ({ filters }: { filters: ReturnType<typeof useFilt
       filters.setServices([...filters.services, service]);
     }
   };
+
+  const visibleServices = showAll ? services : services.slice(0, 10);
 
   return (
     <div className="space-y-3">
@@ -42,16 +71,43 @@ export const ServicesFilter = ({ filters }: { filters: ReturnType<typeof useFilt
 
       {isOpen && (
         <div className="space-y-2 pt-2">
-          {services.map((service) => (
-            <label key={service.label} className="flex items-center gap-2 cursor-pointer">
-              <Checkbox
-                checked={filters.services.includes(service.label)}
-                onCheckedChange={() => toggleService(service.label)}
-              />
-              <span className="flex-1 text-sm">{service.label}</span>
-              <span className="text-gray-500 text-sm">{service.count}</span>
-            </label>
-          ))}
+          {loading ? (
+            <p className="text-sm text-gray-500">Loading...</p>
+          ) : (
+            <>
+              {visibleServices.map((service) => (
+                <label
+                  key={service.id}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Checkbox
+                    checked={filters.services.includes(service.name)}
+                    onCheckedChange={() => toggleService(service.name)}
+                  />
+                  <span className="flex-1 text-sm">{service.name}</span>
+                </label>
+              ))}
+
+              {services.length > 10 && (
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="text-sm hover:underline hover:cursor-pointer mt-2"
+                >
+                  {showAll ? (
+                    <div className="flex flex-row gap-1">
+                      <ChevronUp className="pr-1" />
+                      Show less
+                    </div>
+                  ) : (
+                    <div className="flex flex-row gap-1">
+                      <ChevronDown className="pr-1" />
+                      Show more
+                    </div>
+                  )}
+                </button>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>
