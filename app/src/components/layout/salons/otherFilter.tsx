@@ -39,7 +39,7 @@ export const OtherFilter = ({ filters }: OtherFilterProps) => {
               name="partner-filter"
               checked={partnerOnly}
               onChange={(e) => handlePartnerOnlyChange(e.target.checked)}
-              className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-500"
+              className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-600"
             />
             <Label 
               htmlFor="partner-salons-only"
