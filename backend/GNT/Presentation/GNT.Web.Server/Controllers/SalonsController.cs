@@ -18,31 +18,17 @@ namespace GNT.Web.Server.Controllers;
 [Route("api/[controller]")]
 public class SalonController : BaseController
 {
- 
 
-    [HttpGet] 
-    public async Task<ActionResult<List<SalonDto>>> GetAll(
-    [FromQuery] PriceBand? band,
-    [FromQuery] bool excludeSalonsWithNoServices = false,
-    [FromQuery] string? orderBy = null,
-    [FromQuery] bool desc = false,
-    [FromQuery] Guid? ownerId = null,        
 
-    CancellationToken ct = default)
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<SalonDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalonDto>>> GetAll(CancellationToken ct)
     {
-        var result = await Mediator.Send(new GetAllSalonsQuery
-        {
-            Band = band,
-            ExcludeSalonsWithNoServices = excludeSalonsWithNoServices,
-            OrderBy = orderBy,
-            Desc = desc
-        }, ct);
-
+        var result = await Mediator.Send(new GetAllSalonsQuery(), ct);
         return Ok(result);
     }
-  
 
-        [HttpGet("{id}")]
+    [HttpGet("{id}")]
     public async Task<SalonDto> Get([FromRoute] Guid id)
     {
         return await Mediator.Send(new SalonQuery(id));
@@ -66,7 +52,7 @@ public class SalonController : BaseController
         await Mediator.Send(new DeleteSalonCommand(id));
     }
 
-  
+
 
 
 }
