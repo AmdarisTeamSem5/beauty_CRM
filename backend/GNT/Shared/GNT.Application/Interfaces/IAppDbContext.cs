@@ -14,7 +14,9 @@ namespace GNT.Application.Interfaces
 
         DbSet<Salon> Salon { get; set; }
         DbSet<SalonService> SalonService { get; set; }
-        // DbSet<SalonServiceType> SalonService { get; }
+        //DbSet<SalonServiceType> SalonService { get; }
+        DbSet<PriceBandOptions> PriceBandOptions { get; set; }
+
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         Task<int> AddAndSaveChangesAsync<T>(T entity, CancellationToken cancellationToken);

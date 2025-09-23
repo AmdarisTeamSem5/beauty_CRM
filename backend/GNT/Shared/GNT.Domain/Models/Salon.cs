@@ -23,7 +23,13 @@ public class Salon : BaseEntity
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
+
+  
+
 }
+
+ 
+
 public class SalonConfiguration : IEntityTypeConfiguration<Salon>
 {
     public void Configure(EntityTypeBuilder<Salon> entity)
@@ -50,7 +56,7 @@ public static class SalonMapping
                 Phone = d.Phone,
                 Email = d.Email,
                 UpdatedAt = d.UpdatedAt,
-                CreatedAt = d.CreatedAt
+                CreatedAt = d.CreatedAt,
             };
         }
     }
