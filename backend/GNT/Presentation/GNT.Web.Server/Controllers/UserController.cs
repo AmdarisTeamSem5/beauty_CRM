@@ -15,10 +15,12 @@ namespace GNT.Web.Server;
 public class UserController : BaseController
 {
 
-    [HttpPost("get-all")]
-    public async Task<PaginatedList<UserDto>> GetUsers([FromBody] PageQuery queryModel)
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<UserDto>>> GetAll(CancellationToken ct)
     {
-        return await Mediator.Send(new UserListQuery(queryModel));
+        var result = await Mediator.Send(new GetAllUsersQuery(), ct);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
