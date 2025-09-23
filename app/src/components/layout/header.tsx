@@ -48,7 +48,7 @@ export default function HeaderLayout({
           <div className="flex items-center space-x-3">
             {primaryButtonText && (
               <Button
-                className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
                 onClick={primaryButtonAction}
               >
                 <Plus className="h-4 w-4 mr-2" />

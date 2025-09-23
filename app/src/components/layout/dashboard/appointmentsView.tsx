@@ -106,7 +106,7 @@ export function AppointmentsView() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
                       {appointment.businessName}
                     </h3>
-                    <p className="text-pink-500 font-medium mb-1">
+                    <p className="text-purple-600 font-medium mb-1">
                       {appointment.service}
                     </p>
                     <p className="text-gray-500 text-sm">

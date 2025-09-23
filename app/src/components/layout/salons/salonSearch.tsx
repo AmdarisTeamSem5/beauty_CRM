@@ -48,7 +48,7 @@ const SalonSearch = () => {
 
           <Button
             onClick={handleSearch}
-            className="bg-pink-500 hover:bg-pink-600 text-white px-6 rounded-lg font-medium text-sm transition-colors duration-200 flex-shrink-0 h-12"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-6 rounded-lg font-medium text-sm transition-colors duration-200 flex-shrink-0 h-12"
           >
             Search
           </Button>
