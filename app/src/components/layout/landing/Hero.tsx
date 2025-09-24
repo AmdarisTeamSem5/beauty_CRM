@@ -3,6 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { JoinBeautyBookModal } from "@/components/layout/landing/joinBeatyBookModal";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -27,11 +28,13 @@ export function Hero() {
         <Button className="bg-purple-600 hover:bg-purple-700">Search</Button>
       </div>
 
-      {/* Buttons */}
+       {/* Buttons */}
       <div className="mt-6 flex justify-center gap-4">
         {/* Open modal instead of plain button */}
         <JoinBeautyBookModal />
-        <Button variant="outline">Explore Salons</Button>
+        <Link href="/salons">
+          <Button variant="outline">Explore Salons</Button>
+        </Link>
       </div>
 
       {/* Stats */}
