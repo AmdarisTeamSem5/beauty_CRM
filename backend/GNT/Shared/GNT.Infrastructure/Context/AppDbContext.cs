@@ -17,7 +17,7 @@ public class AppDbContext : DbContext, IAppDbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-       
+
     }
 
     public AppDbContext(DbContextOptions<AppDbContext> options, ISession session)
@@ -36,6 +36,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public virtual DbSet<Salon> Salon { get; set; }
     public virtual DbSet<SalonService> SalonService { get; set; }
     public virtual DbSet<PriceBandOptions> PriceBandOptions { get; set; }
+    public virtual DbSet<Appointment> Appointment { get; set; }
 
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -57,12 +58,12 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Role).Assembly);
 
         modelBuilder.Entity<Salon>()
-            .HasOne(s => s.Owner)        
-            .WithMany(u => u.Salons)    
+            .HasOne(s => s.Owner)
+            .WithMany(u => u.Salons)
             .HasForeignKey(s => s.OwnerId)
-            .OnDelete(DeleteBehavior.Restrict); 
+            .OnDelete(DeleteBehavior.Restrict);
 
-        base.OnModelCreating(modelBuilder); 
+        base.OnModelCreating(modelBuilder);
     }
 
 
@@ -74,6 +75,6 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         var entries = ChangeTracker.Entries<BaseEntity>();
 
-    
+
     }
 }
