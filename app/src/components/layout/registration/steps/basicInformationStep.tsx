@@ -58,8 +58,10 @@ export default function BasicInformationStep({
         {/* Salon Type */}
         <div>
           <Label className="text-base font-medium">What type of business do you run?</Label>
-          <div className="mt-3">
-            <label className="flex items-start space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+          <div className="mt-3 space-y-3">
+            <label className={`flex items-start space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${
+              formData.salonType === 'individual' ? 'border-purple-200 bg-purple-50' : ''
+            }`}>
               <input
                 type="radio"
                 name="salonType"
@@ -73,40 +75,77 @@ export default function BasicInformationStep({
                 <div className="text-sm text-gray-500">Check this if you work independently or run a solo practice</div>
               </div>
             </label>
+            
+            <label className={`flex items-start space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${
+              formData.salonType === 'business' ? 'border-purple-200 bg-purple-50' : ''
+            }`}>
+              <input
+                type="radio"
+                name="salonType"
+                value="business"
+                checked={formData.salonType === 'business'}
+                onChange={(e) => onInputChange('salonType', e.target.value as 'business')}
+                className="mt-1"
+              />
+              <div>
+                <div className="font-medium">I run a multi-person salon or business</div>
+                <div className="text-sm text-gray-500">Check this if you have multiple stylists or employees</div>
+              </div>
+            </label>
           </div>
         </div>
 
-        {/* Salon Name */}
-        <div>
-          <Label htmlFor="salonName">Salon Name *</Label>
-          <div className="relative mt-1">
-            <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-            <Input
-              id="salonName"
-              className="pl-10"
-              placeholder="e.g., Glamour Beauty Salon"
-              value={formData.salonName}
-              onChange={(e) => onInputChange('salonName', e.target.value)}
-            />
+        {/* Conditional Fields Based on Salon Type */}
+        {formData.salonType === 'individual' ? (
+          // Individual Stylist Fields
+          <div>
+            <Label htmlFor="salonName">Your Professional Name *</Label>
+            <div className="relative mt-1">
+              <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                id="salonName"
+                className="pl-10"
+                placeholder="e.g., Sarah's Hair Studio"
+                value={formData.salonName}
+                onChange={(e) => onInputChange('salonName', e.target.value)}
+              />
+            </div>
+            {errors.salonName && <p className="text-red-500 text-sm mt-1">{errors.salonName}</p>}
           </div>
-          {errors.salonName && <p className="text-red-500 text-sm mt-1">{errors.salonName}</p>}
-        </div>
+        ) : (
+          // Business Fields
+          <>
+            <div>
+              <Label htmlFor="salonName">Salon Name *</Label>
+              <div className="relative mt-1">
+                <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="salonName"
+                  className="pl-10"
+                  placeholder="e.g., Glamour Beauty Salon"
+                  value={formData.salonName}
+                  onChange={(e) => onInputChange('salonName', e.target.value)}
+                />
+              </div>
+              {errors.salonName && <p className="text-red-500 text-sm mt-1">{errors.salonName}</p>}
+            </div>
 
-        {/* Contact Name */}
-        <div>
-          <Label htmlFor="contactName">Business Contact Name *</Label>
-          <div className="relative mt-1">
-            <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-            <Input
-              id="contactName"
-              className="pl-10"
-              placeholder="e.g., John Smith"
-              value={formData.contactName}
-              onChange={(e) => onInputChange('contactName', e.target.value)}
-            />
-          </div>
-          {errors.contactName && <p className="text-red-500 text-sm mt-1">{errors.contactName}</p>}
-        </div>
+            <div>
+              <Label htmlFor="contactName">Business Contact Name *</Label>
+              <div className="relative mt-1">
+                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="contactName"
+                  className="pl-10"
+                  placeholder="e.g., John Smith"
+                  value={formData.contactName}
+                  onChange={(e) => onInputChange('contactName', e.target.value)}
+                />
+              </div>
+              {errors.contactName && <p className="text-red-500 text-sm mt-1">{errors.contactName}</p>}
+            </div>
+          </>
+        )}
 
         {/* Email and Phone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

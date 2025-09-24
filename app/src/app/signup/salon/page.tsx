@@ -1,5 +1,4 @@
-
-// /app/signup/salon/page.tsx
+// /app/signup/customer/page.tsx
 "use client";
 
 import React, { useState } from 'react';
@@ -144,8 +143,17 @@ export default function SalonOwnerRegistrationPage(): React.JSX.Element {
     const newErrors: FormErrors = {};
     
     if (step === 1) {
-      if (!formData.salonName.trim()) newErrors.salonName = 'Salon name is required';
-      if (!formData.contactName.trim()) newErrors.contactName = 'Contact name is required';
+      if (!formData.salonName.trim()) {
+        newErrors.salonName = formData.salonType === 'individual' 
+          ? 'Professional name is required' 
+          : 'Salon name is required';
+      }
+      
+      // Only validate contactName for business type
+      if (formData.salonType === 'business' && !formData.contactName.trim()) {
+        newErrors.contactName = 'Contact name is required';
+      }
+      
       if (!formData.email.trim()) {
         newErrors.email = 'Email is required';
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
