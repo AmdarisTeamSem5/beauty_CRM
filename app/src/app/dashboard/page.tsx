@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import HeaderLayout from "@/components/layout/header";
+import HeaderLayout from "@/components/layout/dashboard/header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";

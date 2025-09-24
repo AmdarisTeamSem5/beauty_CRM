@@ -41,9 +41,11 @@ export default function NavBar() {
     <header className="w-screen border-b bg-white/80 backdrop-blur-md sticky top-0 z-50 -mx-42">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center space-x-3">
-          <div className="text-xl font-bold text-purple-600 flex items-center gap-2">
-            ✨ Beauty Book
-          </div>
+          <Link key="landing-redirect" href="/">
+            <div className="text-xl font-bold text-purple-600 flex items-center gap-2">
+              ✨ Beauty Book
+            </div>
+          </Link>
           <span className="hidden sm:block text-xs text-muted-foreground border-l pl-3 ml-3">
             CRM System
           </span>
