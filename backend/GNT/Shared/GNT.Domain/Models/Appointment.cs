@@ -2,71 +2,70 @@
 // using GNT.Shared.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-// using System.Linq.Expressions;
-// using GNT.Shared.Dtos.Appoints;
+using System.Linq.Expressions;
+using GNT.Shared.Dtos.Appointments;
 
 
 
 namespace GNT.Domain.Models;
 
-public class Appoint : BaseEntity
+public class Appointment : BaseEntity // inherits Id
 {
-    public Guid OwnerId { get; set; } // the user who made the appointment
-    public User Owner { get; set; }
+    public Guid ClientId { get; set; } // the user who made the appointment
+    public User Client { get; set; }
     public Guid SalonServiceId { get; set; } // the service for the appointment 
-    // public Guid Salon { get; set; } SalonService also contains the information about the salon so it doesn't need to be stored
-    public DateTime Time { get; set; }
+    public Guid SpecialistId { get; set; }
+    public Guid SalonId { get; set; } // SalonService also contains the information about the salon so it doesn't need to be stored
+    public DateTime AppointmentDate { get; set; }
+    public bool Comfirmed { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
 
 
 
-public class AppointConfiguration : IEntityTypeConfiguration<Appoint>
+public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
 {
-    public void Configure(EntityTypeBuilder<Appoint> entity)
+    public void Configure(EntityTypeBuilder<Appointment> entity)
     {
         entity.ConfigureBase();
     }
 }
 
-public static class AppointMapping
+public static class AppointmentMapping
 {
-    // public static Expression<Func<Appoint, AppointDto>> DtoProjection
-    // {
-    //     get
-    //     {
-    //         return d => new AppointDto
-    //         {
-    //             Id = d.Id,
-    //             OwnerId = d.OwnerId,
-    //             Name = d.Name,
-    //             Rating = d.Rating,
-    //             Description = d.Description,
-    //             Address = d.Address,
-    //             Region = d.Region,
-    //             Phone = d.Phone,
-    //             Email = d.Email,
-    //             UpdatedAt = d.UpdatedAt,
-    //             CreatedAt = d.CreatedAt,
-    //         };
-    //     }
-    // }
-    //
-    // public static Appoint CreateEntity(this CreateAppointDto d)
-    // {
-    //     return new Appoint
-    //     {
-    //         Id = Guid.NewGuid(),
-    //         OwnerId = d.OwnerId,
-    //         Name = d.Name,
-    //         Rating = d.Rating,
-    //         Description = d.Description,
-    //         Address = d.Address,
-    //         Region = d.Region,
-    //         Phone = d.Phone,
-    //         Email = d.Email,
-    //         CreatedAt = DateTime.UtcNow,
-    //     };
-    // }
+    public static Expression<Func<Appointment, AppointmentDto>> DtoProjection
+    {
+        get
+        {
+            return d => new AppointmentDto
+            {
+                Id = d.Id,
+                // ClientId = d.ClientId,
+                // Client = d.Client,
+                // SalonServiceId = d.SalonServiceId,
+                // SalonId = d.SalonId,
+                // AppointmentDate = d.AppointmentDate,
+                // Comfirmed = d.Comfirmed,
+                // UpdatedAt = d.UpdatedAt,
+                // CreatedAt = d.CreatedAt,
+            };
+        }
+    }
+
+    public static Appointment CreateEntity(this CreateAppointmentDto d)
+    {
+        return new Appointment
+        {
+            Id = Guid.NewGuid(),
+            ClientId = d.ClientId,
+            // Client = d.Client,
+            SalonServiceId = d.SalonServiceId,
+            SalonId = d.SalonId,
+            AppointmentDate = d.AppointmentDate,
+            Comfirmed = d.Comfirmed,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+        };
+    }
 }

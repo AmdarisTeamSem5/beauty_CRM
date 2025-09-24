@@ -22,6 +22,43 @@ namespace GNT.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Comfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SalonServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SpecialistId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Appointment");
+                });
+
             modelBuilder.Entity("GNT.Domain.Models.PriceBandOptions", b =>
                 {
                     b.Property<Guid>("Id")
@@ -228,6 +265,17 @@ namespace GNT.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSecurityCode");
+                });
+
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
+                {
+                    b.HasOne("GNT.Domain.Models.User", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("GNT.Domain.Models.RolePermission", b =>
