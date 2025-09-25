@@ -15,7 +15,7 @@ namespace GNT.Web.Server;
 public class UserController : BaseController
 {
 
-    [HttpGet]   // GET /api/salon
+    [HttpGet]   // GET /api/user
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<UserDto>>> GetAll(CancellationToken ct)
     {
