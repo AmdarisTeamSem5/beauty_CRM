@@ -34,7 +34,7 @@ namespace GNT.Infrastructure.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Comfirmed")
+                    b.Property<bool>("Confirmed")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedAt")
