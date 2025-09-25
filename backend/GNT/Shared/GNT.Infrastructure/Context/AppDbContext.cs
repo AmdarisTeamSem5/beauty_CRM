@@ -37,6 +37,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public virtual DbSet<SalonService> SalonService { get; set; }
     public virtual DbSet<PriceBandOptions> PriceBandOptions { get; set; }
     public virtual DbSet<Appointment> Appointment { get; set; }
+    public virtual DbSet<Specialist> Specialist { get; set; }
 
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
