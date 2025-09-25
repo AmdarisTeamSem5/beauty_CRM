@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Scissors, User, Calendar, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
 
 const steps = [
   {
@@ -90,6 +91,7 @@ const timeSlots = [
 ];
 
 export default function BookingProcess() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedService, setSelectedService] = useState<
     (typeof serviceTypes)[0] | null
@@ -126,6 +128,57 @@ export default function BookingProcess() {
         return false;
     }
   };
+
+  const handleNewBooking = async () => {
+    try {
+      // 1. CREATE DUMMY USER
+      const userData = {
+        email: "test@test.com",
+        firstName: "Tester",
+        lastName: "Testy",
+        phoneNumber: "32434242432",
+        isBlocked: false,
+      };
+      const res = await fetch("http://localhost:5191/api/User", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!res.ok) throw new Error("Failed to create user");
+
+      const userId = await res.json();
+      // console.log(userId); // user's id
+
+      // 2. USE USER'S ID TO CREATE APPOINTMENT
+      const appointmentData = {
+        clientId: userId,
+        salonServiceId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        salonId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        appointmentDate: "2025-09-25T11:00:08.146Z",
+        confirmed: true,
+      };
+      const appointmentRes = await fetch(
+        "http://localhost:5191/api/Appointment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(appointmentData),
+        }
+      );
+      if (!appointmentRes.ok) throw new Error("Failed to log new appointment");
+      const appointmentId = await appointmentRes.json();
+      console.log(appointmentId);
+
+      router.push("/dashboard");
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <section className="py-20 min-h-screen flex items-center">
@@ -407,6 +460,7 @@ export default function BookingProcess() {
                   <Button
                     className="flex-1 bg-purple-600 hover:bg-purple-700"
                     size="lg"
+                    onClick={handleNewBooking}
                   >
                     Confirm Booking
                   </Button>

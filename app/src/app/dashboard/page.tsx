@@ -19,9 +19,7 @@ export default function DashboardPage() {
     { value: "cancelled", label: "Cancelled" },
   ];
 
-  const handleBookAppointment = () => {
-    console.log("Book appointment clicked");
-  };
+
 
   const handleProfile = () => {
     console.log("Profile clicked");
