@@ -2,10 +2,8 @@ export default function Footer() {
   return (
     <footer className="bg-neutral-50 border-t py-12 sm:py-16 mt-16 sm:mt-20 w-full">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        {/* Mobile: Logo first, then stacked sections */}
         <div className="flex flex-col space-y-8 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-12 lg:gap-16">
           
-          {/* Logo & Info - Full width on mobile */}
           <div className="text-center sm:text-left sm:col-span-2 lg:col-span-1">
             <h3 className="text-purple-600 font-bold text-2xl sm:text-xl mb-4">
               ✨ Beauty Book
