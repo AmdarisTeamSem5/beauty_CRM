@@ -34,8 +34,6 @@ export default function DashboardPage() {
         userInitials="SJ"
         avatarSrc="/placeholder-avatar.jpg"
         subtitle="Manage your beauty appointments"
-        primaryButtonText="Book Appointment"
-        primaryButtonAction={handleBookAppointment}
         secondaryButtonText="Profile"
         secondaryButtonAction={handleProfile}
       />
