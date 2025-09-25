@@ -1,17 +1,16 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Settings, Plus } from "lucide-react";
+import Link from "next/link";
 
 interface HeaderLayoutProps {
   userName?: string;
   userInitials?: string;
   avatarSrc?: string;
   subtitle?: string;
-  primaryButtonText?: string;
-  primaryButtonAction?: () => void;
   secondaryButtonText?: string;
   secondaryButtonAction?: () => void;
 }
@@ -21,10 +20,8 @@ export default function HeaderLayout({
   userInitials = "",
   avatarSrc,
   subtitle = "",
-  primaryButtonText = "",
-  primaryButtonAction,
   secondaryButtonText = "",
-  secondaryButtonAction
+  secondaryButtonAction,
 }: HeaderLayoutProps) {
   return (
     <div className="md:-mx-42 w-screen md:px-42 bg-white border-b">
@@ -46,15 +43,15 @@ export default function HeaderLayout({
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            {primaryButtonText && (
+            <Link href="/book">
               <Button
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
-                onClick={primaryButtonAction}
+                size="lg"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg hover:cursor-pointer"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                {primaryButtonText}
+                <Plus className="h-4 w-4 mr-2" /> Book Appointment
               </Button>
-            )}
+            </Link>
+
             {secondaryButtonText && (
               <Button
                 variant="ghost"

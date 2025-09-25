@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +46,9 @@ const mockAppointments: Appointment[] = [
   },
 ];
 
+
+
+
 export function AppointmentsView() {
   const [activeTab, setActiveTab] = useState<"upcoming" | "history" | "all">(
     "upcoming"
@@ -59,6 +62,29 @@ export function AppointmentsView() {
     console.log("Cancel appointment:", appointmentId);
   };
 
+  const [appointments, setAppointments] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const res = await fetch("http://localhost:5191/api/Appointment", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch appointments");
+
+        const data = await res.json();
+        setAppointments(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+
   return (
     <div className="w-full">
       {/* Tab Navigation */}
@@ -71,7 +97,7 @@ export function AppointmentsView() {
               : "border-transparent text-gray-500 hover:text-gray-700"
           }`}
         >
-          Upcoming (2)
+          Upcoming (X)
         </button>
         <button
           onClick={() => setActiveTab("history")}
@@ -81,7 +107,7 @@ export function AppointmentsView() {
               : "border-transparent text-gray-500 hover:text-gray-700"
           }`}
         >
-          History (3)
+          History (X)
         </button>
         <button
           onClick={() => setActiveTab("all")}
@@ -97,20 +123,20 @@ export function AppointmentsView() {
 
       {/* Appointments List */}
       <div className="space-y-4">
-        {mockAppointments.map((appointment) => (
+        {appointments.map((appointment) => (
           <Card key={appointment.id} className="p-6 bg-white shadow-sm">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                      {appointment.businessName}
+                      [Salon Name] - Appointment #{appointment.id}
                     </h3>
                     <p className="text-purple-600 font-medium mb-1">
-                      {appointment.service}
+                      Sample Service
                     </p>
                     <p className="text-gray-500 text-sm">
-                      {appointment.address}
+                      Sample Address
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -118,11 +144,11 @@ export function AppointmentsView() {
                       variant="secondary"
                       className="bg-green-100 text-green-800 hover:bg-green-100"
                     >
-                      {appointment.status}
+                      {appointment.confirmed}
                     </Badge>
                     <div className="text-right">
                       <p className="text-xl font-semibold text-gray-900">
-                        ${appointment.price}
+                        $000
                       </p>
                     </div>
                   </div>
@@ -131,17 +157,17 @@ export function AppointmentsView() {
                 <div className="flex items-center gap-6 text-sm text-gray-600 mb-4">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    <span>{appointment.date}</span>
+                    <span>Sample date</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     <span>
-                      {appointment.time} ({appointment.duration})
+                      Sample time (sample duration)
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    <span>{appointment.clientName}</span>
+                    <span>Sample client name</span>
                   </div>
                 </div>
 

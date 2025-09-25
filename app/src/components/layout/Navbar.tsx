@@ -73,7 +73,7 @@ export default function NavBar() {
                 <Button
                   variant={isActive ? "secondary" : "ghost"}
                   className={cn(
-                    "flex items-center space-x-2 px-3 py-2 text-sm",
+                    "flex items-center space-x-2 px-3 py-2 text-sm hover:cursor-pointer",
                     isActive &&
                       "bg-purple-100 text-purple-700 hover:bg-purple-100"
                   )}
@@ -88,16 +88,6 @@ export default function NavBar() {
 
         {/* Right side actions */}
         <div className="hidden md:flex items-center space-x-3">
-          {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-4 w-4" />
-            <Badge
-              variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
-            >
-              3
-            </Badge>
-          </Button>
 
           {/* User Menu */}
           <DropdownMenu>

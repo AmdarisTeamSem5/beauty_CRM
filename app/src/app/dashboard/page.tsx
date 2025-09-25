@@ -19,9 +19,7 @@ export default function DashboardPage() {
     { value: "cancelled", label: "Cancelled" },
   ];
 
-  const handleBookAppointment = () => {
-    console.log("Book appointment clicked");
-  };
+
 
   const handleProfile = () => {
     console.log("Profile clicked");
@@ -34,8 +32,6 @@ export default function DashboardPage() {
         userInitials="SJ"
         avatarSrc="/placeholder-avatar.jpg"
         subtitle="Manage your beauty appointments"
-        primaryButtonText="Book Appointment"
-        primaryButtonAction={handleBookAppointment}
         secondaryButtonText="Profile"
         secondaryButtonAction={handleProfile}
       />
