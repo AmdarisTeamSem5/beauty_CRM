@@ -50,7 +50,7 @@ const SalonCard = ({ salon }: SalonCardProps) => {
         )}
 
         {salon.isPartner && (
-          <div className="absolute top-2 left-2 bg-pink-500 text-white text-xs sm:text-sm font-semibold px-2 py-1 rounded">
+          <div className="absolute top-2 left-2 bg-purple-600 text-white text-xs sm:text-sm font-semibold px-2 py-1 rounded">
             Partner
           </div>
         )}
@@ -106,14 +106,14 @@ const SalonCard = ({ salon }: SalonCardProps) => {
             </div>
 
             {salon.priceLevel && (
-              <div className="text-pink-500 font-semibold text-xs sm:text-sm">
+              <div className="text-purple-600 font-semibold text-xs sm:text-sm">
                 {renderPriceLevel(salon.priceLevel)}
               </div>
             )}
           </div>
         </div>
 
-        <button className="w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 mt-2 sm:mt-4">
+        <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 mt-2 sm:mt-4">
           <span className="text-xs sm:text-sm">View Details</span>
           <svg
             className="w-3 h-3 sm:w-4 sm:h-4"

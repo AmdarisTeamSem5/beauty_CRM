@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace GNT.Infrastructure.Context
 {
-    public class GntContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-           var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             try
             {
                 optionsBuilder.UseSqlServer(
@@ -27,7 +27,6 @@ namespace GNT.Infrastructure.Context
             }
 
             return new AppDbContext(optionsBuilder.Options);
-        
         }
     }
 }

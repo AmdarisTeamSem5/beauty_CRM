@@ -22,49 +22,58 @@ namespace GNT.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GNT.Domain.Models.BusinessProduct", b =>
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedById")
+                    b.Property<Guid>("SalonId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DateOut")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DatetIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsInStock")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastUpdatedById")
+                    b.Property<Guid>("SalonServiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("SpecialistId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("ClientId");
 
-                    b.HasIndex("LastUpdatedById");
+                    b.ToTable("Appointment");
+                });
 
-                    b.ToTable("BusinessProduct");
+            modelBuilder.Entity("GNT.Domain.Models.PriceBandOptions", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("LowMax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MediumMax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PriceBandOptions");
                 });
 
             modelBuilder.Entity("GNT.Domain.Models.Role", b =>
@@ -73,32 +82,16 @@ namespace GNT.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDefaultRole")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastUpdatedById");
 
                     b.ToTable("Role");
                 });
@@ -128,20 +121,11 @@ namespace GNT.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -152,14 +136,18 @@ namespace GNT.Infrastructure.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<float>("Rating")
+                        .HasColumnType("real");
+
                     b.Property<int>("Region")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastUpdatedById");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Salon");
                 });
@@ -170,23 +158,11 @@ namespace GNT.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DurationMinutes")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -205,10 +181,6 @@ namespace GNT.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastUpdatedById");
-
                     b.ToTable("SalonService");
                 });
 
@@ -216,12 +188,6 @@ namespace GNT.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -236,23 +202,13 @@ namespace GNT.Infrastructure.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("LastUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UnblockDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastUpdatedById");
 
                     b.ToTable("User");
                 });
@@ -311,34 +267,15 @@ namespace GNT.Infrastructure.Migrations
                     b.ToTable("UserSecurityCode");
                 });
 
-            modelBuilder.Entity("GNT.Domain.Models.BusinessProduct", b =>
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
                 {
-                    b.HasOne("GNT.Domain.Models.User", "CreatedBy")
+                    b.HasOne("GNT.Domain.Models.User", "Client")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("GNT.Domain.Models.User", "LastUpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("LastUpdatedById");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("LastUpdatedBy");
-                });
-
-            modelBuilder.Entity("GNT.Domain.Models.Role", b =>
-                {
-                    b.HasOne("GNT.Domain.Models.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("GNT.Domain.Models.User", "LastUpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("LastUpdatedById");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("LastUpdatedBy");
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("GNT.Domain.Models.RolePermission", b =>
@@ -354,47 +291,13 @@ namespace GNT.Infrastructure.Migrations
 
             modelBuilder.Entity("GNT.Domain.Models.Salon", b =>
                 {
-                    b.HasOne("GNT.Domain.Models.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
+                    b.HasOne("GNT.Domain.Models.User", "Owner")
+                        .WithMany("Salons")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("GNT.Domain.Models.User", "LastUpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("LastUpdatedById");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("LastUpdatedBy");
-                });
-
-            modelBuilder.Entity("GNT.Domain.Models.SalonService", b =>
-                {
-                    b.HasOne("GNT.Domain.Models.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("GNT.Domain.Models.User", "LastUpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("LastUpdatedById");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("LastUpdatedBy");
-                });
-
-            modelBuilder.Entity("GNT.Domain.Models.User", b =>
-                {
-                    b.HasOne("GNT.Domain.Models.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("GNT.Domain.Models.User", "LastUpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("LastUpdatedById");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("LastUpdatedBy");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("GNT.Domain.Models.UserRole", b =>
@@ -436,6 +339,8 @@ namespace GNT.Infrastructure.Migrations
 
             modelBuilder.Entity("GNT.Domain.Models.User", b =>
                 {
+                    b.Navigation("Salons");
+
                     b.Navigation("UserRoles");
 
                     b.Navigation("UserSecurityCodes");

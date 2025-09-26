@@ -21,31 +21,29 @@ public class CreateUserCommand : IRequest<Guid>
 
 public class CreateUserCommandHandler : RequestHandler<CreateUserCommand, Guid>
 {
-    private readonly IEmailService EmailService;
-
-    public CreateUserCommandHandler(IServiceProvider serviceProvider, IEmailService emailService) : base(serviceProvider)
+    public CreateUserCommandHandler(IServiceProvider serviceProvider) : base(serviceProvider)
     {
-        EmailService = emailService;
     }
 
     public override async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var newUser = request.PostModel.CreateEntity();
 
-        if(appDbContext.User.Any(d => d.Email.ToLower() == request.PostModel.Email.ToLower()))
+        /* if(appDbContext.User.Any(d => d.Email.ToLower() == request.PostModel.Email.ToLower()))
         {
             throw new BusinessException(FailureCode.DuplicateEmail);
-        }
+        } */
 
         newUser.GenerateUserSecurityCode(SecurityCodeTypes.ResetPassword);
 
         await appDbContext.AddAndSaveChangesAsync(newUser, cancellationToken);
 
-        SendRegistrationEmail(newUser.Email, newUser.FirstName, newUser.UserSecurityCodes.First().Code, newUser.UserSecurityCodes.First().ExpiresAt);
+        // SendRegistrationEmail(newUser.Email, newUser.FirstName, newUser.UserSecurityCodes.First().Code, newUser.UserSecurityCodes.First().ExpiresAt);
 
         return newUser.Id;
     }
 
+    /*
     private void SendRegistrationEmail(string email, string firstName, string securityCode, DateTime expiresAt)
     {
         var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\EmailTemplates";
@@ -59,19 +57,8 @@ public class CreateUserCommandHandler : RequestHandler<CreateUserCommand, Guid>
             .Replace("{SecurityCode}", securityCode)
             .Replace("{FirstName}", firstName);
 
-        EmailService.QuickSendAsync("Welcome", template, email);
+        // EmailService.QuickSendAsync("Welcome", template, email);
     }
+    */
 }
 
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
-{
-    public CreateUserCommandValidator()
-    {
-        RuleFor(d=>d.PostModel.Email)
-            .NotNull()
-            .NotEmpty()
-            .EmailAddress()
-            .WithState(d => FailureCode.InvalidEmailAddress);
-    }
-
-}

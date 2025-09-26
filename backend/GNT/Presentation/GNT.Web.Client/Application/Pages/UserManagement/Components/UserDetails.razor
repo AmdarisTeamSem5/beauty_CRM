@@ -56,6 +56,7 @@
     private string Email { get; set; }
     private string FirstName { get; set; }
     private string LastName { get; set; }
+    private string PhoneNumber { get; set; }
     private bool IsBlocked { get; set; }
 
     private IEnumerable<RoleDto> InitialUserRoles = Enumerable.Empty<RoleDto>();
@@ -75,6 +76,7 @@
             Email = user.Email;
             FirstName = user.FirstName;
             LastName = user.LastName;
+            PhoneNumber = user.PhoneNumber;
             IsBlocked = user.IsBlocked;
 
             InitialUserRoles = await httpClient.Get<List<RoleDto>>($"{ApplicationEndpoints.Users}/{Id}/roles");
@@ -131,7 +133,7 @@
 
         if (!Id.HasValue)
         {
-            var postModel = new CreateUserDto(Email, FirstName, LastName, IsBlocked);
+            var postModel = new CreateUserDto(Email, FirstName, LastName, PhoneNumber, IsBlocked);
 
             Id = await httpClient.Post<CreateUserDto, Guid>(ApplicationEndpoints.Users, postModel);
 
@@ -140,7 +142,7 @@
         else
         {
             var original = new EditUserDto(user);
-            var edited = new EditUserDto(FirstName, LastName, IsBlocked);
+            var edited = new EditUserDto(FirstName, LastName, PhoneNumber, IsBlocked);
 
             var model = Generics.GetDifferences(original, edited);
 

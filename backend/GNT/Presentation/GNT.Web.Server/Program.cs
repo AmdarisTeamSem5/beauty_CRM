@@ -1,4 +1,5 @@
 using GNT.Application;
+using GNT.Domain.Models;
 using GNT.ExceptionHandling.Middlewears;
 using GNT.Infrastructure;
 using GNT.Web.Server.Config;
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.Configure<PriceBandOptions>(
+    builder.Configuration.GetSection("PriceBand"));
 builder.Services.AddServerServices();
 
 var app = builder.Build();

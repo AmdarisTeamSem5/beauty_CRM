@@ -12,13 +12,24 @@ namespace GNT.Domain.Models;
 public class Salon : BaseEntity
 {
     public Guid OwnerId { get; set; }
+    public User Owner { get; set; }
     public string Name { get; set; }
+    public float Rating { get; set; }
     public string Description { get; set; }
     public string Address { get; set; }
     public Region Region { get; set; }
     public string Phone { get; set; }
     public string Email { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+
+
+  
+
 }
+
+ 
+
 public class SalonConfiguration : IEntityTypeConfiguration<Salon>
 {
     public void Configure(EntityTypeBuilder<Salon> entity)
@@ -38,11 +49,14 @@ public static class SalonMapping
                 Id = d.Id,
                 OwnerId = d.OwnerId,
                 Name = d.Name,
+                Rating = d.Rating,
                 Description = d.Description,
                 Address = d.Address,
                 Region = d.Region,
                 Phone = d.Phone,
                 Email = d.Email,
+                UpdatedAt = d.UpdatedAt,
+                CreatedAt = d.CreatedAt,
             };
         }
     }
@@ -54,11 +68,13 @@ public static class SalonMapping
             Id = Guid.NewGuid(),
             OwnerId = d.OwnerId,
             Name = d.Name,
+            Rating = d.Rating,
             Description = d.Description,
             Address = d.Address,
             Region = d.Region,
             Phone = d.Phone,
             Email = d.Email,
+            CreatedAt = DateTime.UtcNow,
         };
     }
 }

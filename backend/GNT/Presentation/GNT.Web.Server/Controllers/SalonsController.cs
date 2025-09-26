@@ -2,6 +2,8 @@
 using GNT.Application.Salons.Commands;
 using GNT.Application.Salons.Queries;
 using GNT.Shared.Dtos.Pagination;
+using GNT.Shared.Dtos.PriceBandOptions;
+using GNT.Shared.Dtos.Pricing;
 using GNT.Shared.Dtos.Salons;
 using GNT.Shared.Enums;
 using GNT.Web.Server.Config;
@@ -16,12 +18,14 @@ namespace GNT.Web.Server.Controllers;
 [Route("api/[controller]")]
 public class SalonController : BaseController
 {
-    [HttpPost("get-all")]
-    public async Task<PaginatedList<SalonDto>> GetAll([FromBody] PageQuery queryModel)
-    {
 
-        var serviceTypes = queryModel.Filters.FirstOrDefault(f => f.PropertyName == "ServiceTypes")?.Value;
-        return await Mediator.Send(new SalonListQuery(queryModel, serviceTypes));
+
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<SalonDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalonDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllSalonsQuery(), ct);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -47,6 +51,8 @@ public class SalonController : BaseController
     {
         await Mediator.Send(new DeleteSalonCommand(id));
     }
+
+
 
 
 }

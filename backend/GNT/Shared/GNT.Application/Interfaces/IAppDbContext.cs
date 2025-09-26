@@ -5,8 +5,6 @@ namespace GNT.Application.Interfaces
 {
     public interface IAppDbContext
     {
-        DbSet<BusinessProduct> BusinessProduct { get; set; }
-
         DbSet<User> User { get; set; }
         DbSet<UserRole> UserRole { get; set; }
         DbSet<UserSecurityCode> UserSecurityCode { get; set; }
@@ -16,7 +14,10 @@ namespace GNT.Application.Interfaces
 
         DbSet<Salon> Salon { get; set; }
         DbSet<SalonService> SalonService { get; set; }
-        // DbSet<SalonServiceType> SalonService { get; }
+        //DbSet<SalonServiceType> SalonService { get; }
+        DbSet<PriceBandOptions> PriceBandOptions { get; set; }
+        DbSet<Appointment> Appointment { get; set; }
+
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         Task<int> AddAndSaveChangesAsync<T>(T entity, CancellationToken cancellationToken);

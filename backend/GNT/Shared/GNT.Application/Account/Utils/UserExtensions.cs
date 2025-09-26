@@ -15,25 +15,6 @@ namespace GNT.Application.Account.Utils
             }
         }
 
-        public static void ValidateStatus(this User user) 
-        {
-            if (user.IsBlocked && user.UnblockDate > DateTime.Now)
-            {
-                if (user.UnblockDate > DateTime.Now.AddYears(10))
-                {
-                    throw new BusinessException(FailureCode.UserPermanentlyBlocked);
-                }
-                else
-                {
-                    throw new BusinessException(FailureCode.UserTemporaryBlocked);
-                }
-            }
-            else if(user.IsBlocked && user.UnblockDate < DateTime.Now)
-            {
-                user.IsBlocked = false;
-                user.UnblockDate = null;
-            }
-        }
 
         public static UserSecurityCode GenerateUserSecurityCode(this User user, SecurityCodeTypes Type)
         {
@@ -96,7 +77,6 @@ namespace GNT.Application.Account.Utils
                 if (securityCode.FailedAttempts >= 5)
                 {
                     user.IsBlocked = true;
-                    user.UnblockDate = DateTime.Now.AddHours(1);
                 }
 
                 validationResult = FailureCode.InvalidSecurityCode;
