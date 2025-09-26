@@ -211,7 +211,7 @@ export default function SalonOwnerRegistrationPage(): React.JSX.Element {
     setErrors({});
   };
 
-  const handleInputChange = (field: keyof FormData, value: string): void => {
+  const handleInputChange = (field: string, value: string): void => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
