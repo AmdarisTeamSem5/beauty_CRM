@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { JoinBeautyBookModal } from "@/components/layout/landing/joinBeatyBookModal";
+import Link from "next/link";
 import { Search } from "lucide-react";
+
 
 export function Hero() {
   return (
@@ -48,15 +50,12 @@ export function Hero() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12 sm:mb-16">
-          <JoinBeautyBookModal />
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="px-6 sm:px-8 py-3 text-base font-semibold rounded-xl border-2 hover:bg-gray-50 transition-colors"
-          >
-            Explore Salons
-          </Button>
-        </div>
+        {/* Open modal instead of plain button */}
+        <JoinBeautyBookModal />
+        <Link href="/salons">
+          <Button variant="outline">Explore Salons</Button>
+        </Link>
+      </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 max-w-4xl mx-auto">
