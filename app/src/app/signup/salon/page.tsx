@@ -320,7 +320,7 @@ export default function SalonOwnerRegistrationPage(): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center justify-center px-4 py-8">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
       <div className="w-full max-w-md mb-4">
         <Link href="/" className="text-sm text-gray-600 hover:underline">
           ← Back to Home
