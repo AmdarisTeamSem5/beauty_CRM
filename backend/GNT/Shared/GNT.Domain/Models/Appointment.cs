@@ -17,7 +17,7 @@ public class Appointment : BaseEntity // inherits Id
     public Guid SpecialistId { get; set; }
     public Guid SalonId { get; set; } // SalonService also contains the information about the salon so it doesn't need to be stored
     public DateTime AppointmentDate { get; set; }
-    public bool Comfirmed { get; set; }
+    public bool Confirmed { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
@@ -46,7 +46,7 @@ public static class AppointmentMapping
                 // SalonServiceId = d.SalonServiceId,
                 // SalonId = d.SalonId,
                 // AppointmentDate = d.AppointmentDate,
-                // Comfirmed = d.Comfirmed,
+                // Confirmed = d.Confirmed,
                 // UpdatedAt = d.UpdatedAt,
                 // CreatedAt = d.CreatedAt,
             };
@@ -63,7 +63,7 @@ public static class AppointmentMapping
             SalonServiceId = d.SalonServiceId,
             SalonId = d.SalonId,
             AppointmentDate = d.AppointmentDate,
-            Comfirmed = d.Comfirmed,
+            Confirmed = d.Confirmed,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
         };

@@ -43,7 +43,7 @@ export default function NavBar() {
   }, [pathname]);
 
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: any) => {
       if (e.key === "Escape") {
         setMobileMenuOpen(false);
       }
@@ -100,7 +100,7 @@ export default function NavBar() {
                 <Button
                   variant={isActive ? "secondary" : "ghost"}
                   className={cn(
-                    "flex items-center space-x-2 px-3 py-2 text-sm",
+                    "flex items-center space-x-2 px-3 py-2 text-sm hover:cursor-pointer",
                     isActive &&
                       "bg-purple-100 text-purple-700 hover:bg-purple-100"
                   )}
