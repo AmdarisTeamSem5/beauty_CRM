@@ -11,7 +11,8 @@ namespace GNT.Infrastructure.Context
             try
             {
                 optionsBuilder.UseSqlServer(
-"Server=127.0.0.1,1433;Database=CRM_Salons_DB;User Id=sa;Password=Str0ng!Pass;Encrypt=False;TrustServerCertificate=True;"                );
+                "Data Source=.\\sqlexpress;Initial Catalog=CRM_Salons_DB;Integrated Security=SSPI;Persist Security Info=True;TrustServerCertificate=True;"
+                );
             }
             catch
             {   // try another string
