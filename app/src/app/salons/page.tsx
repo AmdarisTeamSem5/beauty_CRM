@@ -6,11 +6,17 @@ import SalonSearch from "@/components/layout/salons/salonSearch";
 
 export default async function SalonsPage() {
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SalonSearch />
-      <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-x-10 my-12">
-        <SalonsFilters />
-        <SalonResults />
+      <div className="flex flex-col lg:flex-row gap-6 my-6 lg:my-12">
+        <aside className="w-full lg:w-80 lg:flex-shrink-0">
+          <div className="lg:sticky lg:top-4">
+            <SalonsFilters />
+          </div>
+        </aside>
+        <main className="flex-1 lg:min-w-0">
+          <SalonResults />
+        </main>
       </div>
     </div>
   );

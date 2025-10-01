@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Scissors, User, Calendar, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {
