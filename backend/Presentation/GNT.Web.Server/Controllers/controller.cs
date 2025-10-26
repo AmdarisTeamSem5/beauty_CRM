@@ -1,45 +1,50 @@
 //@generic imports
-using GNT.Application.Account.Commands;
-using GNT.Application.Account.Queries;
+using Microsoft.Extensions.Options;
 using GNT.Shared.Dtos.Pagination;
-using GNT.Shared.Dtos.Roles;
+using GNT.Shared.Dtos;
+using GNT.Shared.Enums;
+using GNT.Dtos.Enums;
 using GNT.Web.Server.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-//@specific imports
-using GNT.Application.Specialists.Commands;
-using GNT.Application.Specialists.Queries;
-using GNT.Shared.Dtos.Specialists;
 
-using GNT.Application.Salons.Commands;
-using GNT.Application.Salons.Queries;
-using GNT.Shared.Dtos.PriceBandOptions;
-using GNT.Shared.Dtos.Pricing;
-using GNT.Shared.Dtos.Salons;
 
-using GNT.Application.SalonServices.Commands;
-using GNT.Application.SalonServices.Queries;
-using GNT.Shared.Dtos.SalonServices;
 
+//@account imports
+using GNT.Application.Account.Commands;
+using GNT.Application.Account.Utils;
+using GNT.Application.Security;
+using GNT.Application.Account.Queries;
+using GNT.Shared.Dtos.UserManagement;
+
+//@appointment imports
+using GNT.Application.Appointments.Commands;
+using GNT.Application.Appointments.Queries;
+using GNT.Shared.Dtos.Appointments;
+
+//@role imports
 using GCSS.Administration.Application.Organizations.Queries;
 using GCSS.Administration.Application.Roles.Commands;
 using GCSS.Administration.Application.Roles.Queries;
 using GNT.Shared.Dtos.Roles;
 
+//@salon imports
+using GNT.Application.Salons.Commands;
+using GNT.Application.Salons.Queries;
+// using GNT.Shared.Dtos.PriceBandOptions;
+// using GNT.Shared.Dtos.Pricing;
+using GNT.Shared.Dtos.Salons;
 
-using GNT.Application.Appointments.Commands;
-using GNT.Application.Appointments.Queries;
-using GNT.Shared.Dtos.Appointments;
+//@service imports
+using GNT.Application.SalonServices.Commands;
+using GNT.Application.SalonServices.Queries;
+using GNT.Shared.Dtos.SalonServices;
 
-
-
-using GNT.Application.Account.Commands;
-using GNT.Application.Account.Utils;
-using GNT.Application.Security;
-using GNT.Application.Account.Queries;
-using Microsoft.Extensions.Options;
-using GNT.Shared.Dtos.UserManagement;
+//@specialist imports
+using GNT.Application.Specialists.Commands;
+using GNT.Application.Specialists.Queries;
+using GNT.Shared.Dtos.Specialists;
 
 
 namespace GNT.Web.Server.Controllers;
@@ -48,61 +53,62 @@ namespace GNT.Web.Server.Controllers;
 [Route("api/[controller]")]
 public class AuthenticationController : BaseController
 {
-private readonly TokenProviderOptions tokenOptions;
+    private readonly TokenProviderOptions tokenOptions;
 
-public AuthenticationController(IOptions<TokenProviderOptions> tokenOptions)
-{
-    this.tokenOptions = tokenOptions.Value;
+    public AuthenticationController(IOptions<TokenProviderOptions> tokenOptions)
+    {
+        this.tokenOptions = tokenOptions.Value;
+    }
+
+    [HttpPost("send-two-factor-code")]
+    public async Task SendTwoFactorAuthenticationCode([FromBody] LoginDto model)
+    {
+        await Mediator.Send(new SendTwoFactorCodeCommand(model.Email, model.Password));
+    }
+
+    [HttpPost("log-in")]
+    public async Task<TokenDto> Login([FromBody] LoginDto model)
+    {
+        return await Mediator.Send(new LoginCommand(model.Email, model.Password, model.SecurityCode));
+    }
+
+    [HttpGet("log-out")]
+    public IActionResult LogOut()
+    {
+        AuthHelper.RemoveUserKey();
+        Response.Cookies.Delete(tokenOptions.CookieName);
+
+        return Ok();
+    }
+
+    [HttpPost("reset-password-request")]
+    public async Task SendResetPasswordCode([FromBody] string email)
+    {
+        await Mediator.Send(new ResetPasswordRequestCommand(email));
+    }
+
+    [HttpGet("security-code/{securityCode}")]
+    public async Task<bool> CheckSecurityCode([FromRoute] string securityCode)
+    {
+        return await Mediator.Send(new CheckSecurityCodeQuery(securityCode, SecurityCodeTypes.ResetPassword));
+    }
+
+    [HttpPost("reset-password")]
+    public async Task ResetPassword([FromBody] ResetPasswordDto model)
+    {
+        var command = new ResetPasswordCommand(model);
+
+        await Mediator.Send(command);
+    }
+
 }
 
-[HttpPost("send-two-factor-code")]
-public async Task SendTwoFactorAuthenticationCode([FromBody] LoginDto model)
-{
-    await Mediator.Send(new SendTwoFactorCodeCommand(model.Email, model.Password));
-}
-
-[HttpPost("log-in")]
-public async Task<TokenDto> Login([FromBody] LoginDto model)
-{
-    return await Mediator.Send(new LoginCommand(model.Email, model.Password, model.SecurityCode));
-}
-
-[HttpGet("log-out")]
-public IActionResult LogOut()
-{
-    AuthHelper.RemoveUserKey();
-    Response.Cookies.Delete(tokenOptions.CookieName);
-
-    return Ok();
-}
-
-[HttpPost("reset-password-request")]
-public async Task SendResetPasswordCode([FromBody] string email)
-{
-    await Mediator.Send(new ResetPasswordRequestCommand(email));
-}
-
-[HttpGet("security-code/{securityCode}")]
-public async Task<bool> CheckSecurityCode([FromRoute] string securityCode)
-{
-    return await Mediator.Send(new CheckSecurityCodeQuery(securityCode, SecurityCodeTypes.ResetPassword));
-}
-
-[HttpPost("reset-password")]
-public async Task ResetPassword([FromBody] ResetPasswordDto model)
-{
-    var command = new ResetPasswordCommand(model);
-
-    await Mediator.Send(command);
-}
-}
 
 // [Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentController : BaseController
 {
-
 
     [HttpGet]   // GET /api/salon
     [ProducesResponseType(typeof(List<AppointmentDto>), StatusCodes.Status200OK)]
@@ -139,6 +145,7 @@ public class AppointmentController : BaseController
     // }
 }
 
+
 // [Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -159,12 +166,15 @@ public class MiscController : BaseController
         return Ok(serviceTypes);
     }
 }
+
+
 // [Authorize]
 [Route("api/[controller]")]
 public class RoleController : BaseController
 {
+
     [HttpGet]
-    [Authorize(Policy = nameof(Permission.ViewRoles))]
+    [Authorize(Policy = nameof(Dtos.Enums.Permission.ViewRoles))]
     public async Task<IEnumerable<RoleDto>> GetAllRoles()
     {
         var query = new RoleListQuery();
@@ -214,11 +224,52 @@ public class RoleController : BaseController
     }
 }
 
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class SalonController : BaseController
+{
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<SalonDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalonDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllSalonsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<SalonDto> Get([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new SalonQuery(id));
+    }
+
+    [HttpPost]
+    public async Task<Guid> Create([FromBody] CreateSalonDto postModel)
+    {
+        return await Mediator.Send(new CreateSalonCommand(postModel));
+    }
+
+    [HttpPatch("{id}")]
+    public async Task Edit([FromRoute] Guid id, [FromBody] EditSalonDto model)
+    {
+        await Mediator.Send(new EditSalonCommand(id, model));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task Delete([FromRoute] Guid id)
+    {
+        await Mediator.Send(new DeleteSalonCommand(id));
+    }
+}
+
+
 // [Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SalonServiceController : BaseController
 {
+
     [HttpGet]   // GET /api/salon
     [ProducesResponseType(typeof(List<SalonServiceDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<SalonServiceDto>>> GetAll(CancellationToken ct)
@@ -251,6 +302,7 @@ public class SalonServiceController : BaseController
         await Mediator.Send(new DeleteSalonServiceCommand(id));
     }
 }
+
 
 // [Authorize]
 [ApiController]
@@ -339,3 +391,4 @@ public class UserController : BaseController
         await Mediator.Send(new ManageUserRolesCommand(id, postModel));
     }
 }
+
