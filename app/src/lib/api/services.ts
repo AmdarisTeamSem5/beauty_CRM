@@ -1,0 +1,147 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5191/api";
+
+export interface Service {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  duration: number;
+  price: number;
+  status: "active" | "inactive";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateServiceDto {
+  name: string;
+  description: string;
+  category: string;
+  duration: number;
+  price: number;
+  status?: "active" | "inactive";
+}
+
+export interface UpdateServiceDto {
+  name?: string;
+  description?: string;
+  category?: string;
+  duration?: number;
+  price?: number;
+  status?: "active" | "inactive";
+}
+
+class ServiceService {
+  private baseUrl: string;
+
+  constructor() {
+    this.baseUrl = `${API_BASE_URL}/Service`;
+  }
+
+  async getAll(): Promise<Service[]> {
+    try {
+      const response = await fetch(this.baseUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch services: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      throw error;
+    }
+  }
+
+  async getById(id: string): Promise<Service> {
+    try {
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch service: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching service ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async create(data: CreateServiceDto): Promise<Service> {
+    try {
+      const response = await fetch(this.baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create service: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error creating service:", error);
+      throw error;
+    }
+  }
+
+  async update(id: string, data: UpdateServiceDto): Promise<Service> {
+    try {
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update service: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error(`Error updating service ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete service: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error(`Error deleting service ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async toggleStatus(id: string): Promise<Service> {
+    const service = await this.getById(id);
+    const newStatus = service.status === "active" ? "inactive" : "active";
+    return this.update(id, { status: newStatus });
+  }
+}
+
+export const serviceService = new ServiceService();

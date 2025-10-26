@@ -26,29 +26,32 @@ const SalonsFilters = () => {
 
   return (
     <>
+      {/* Mobile filter toggle */}
       <div className="lg:hidden mb-4 w-full">
         <Button
           variant="outline"
-          className="w-full mx-12"
+          className="w-full"
           onClick={() => setOpen(!open)}
         >
           {open ? "Hide Filters" : "Show Filters"}
         </Button>
       </div>
+
+      {/* Filter card */}
       <Card
-        className={`h-full w-full mx-auto lg:h-full lg:w-100 lg:sticky lg:top-0 ${
+        className={`w-full ${
           open ? "block" : "hidden"
-        } lg:block`}
+        } lg:block lg:sticky lg:top-4`}
       >
         <CardHeader className="pb-4">
           <div className="flex justify-between items-center">
             <CardTitle className="text-lg font-semibold">Filters</CardTitle>
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               <Button
                 onClick={applyFilters}
                 variant="ghost"
                 size="sm"
-                className="border border-transparent hover:border-gray-300 hover:bg-gray-50"
+                className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
               >
                 Apply
               </Button>
@@ -56,7 +59,7 @@ const SalonsFilters = () => {
                 onClick={clearFilters}
                 variant="ghost"
                 size="sm"
-                className="border border-transparent hover:border-gray-300 hover:bg-gray-50"
+                className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
               >
                 Clear
               </Button>
