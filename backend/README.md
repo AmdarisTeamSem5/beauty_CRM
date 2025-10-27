@@ -365,7 +365,6 @@ All endpoints run on localhost:7284 by default
   </td>
 </tr>
 <tr>
-// get 1
   <td> Get 1 Specialist by Id</td>
   <td>
 
@@ -414,34 +413,6 @@ Retrieves all specialists.
   }
 ]
 ```
-
-### Get Specialist
-**GET** `/api/Specialist/{id}`
-
-Retrieves a specific specialist by ID.
-
-**Parameters:**
-- `id` (guid, in path) - Specialist ID
-
-**Response:** SpecialistDto
-
-### Create Specialist
-**POST** `/api/Specialist`
-
-Creates a new specialist.
-
-**Request Body:** CreateSpecialistDto
-
-**Response:** `guid` (ID of created specialist)
-
-### Delete Specialist
-**DELETE** `/api/Specialist/{id}`
-
-Deletes a specialist.
-
-**Parameters:**
-- `id` (guid, in path) - Specialist ID
-
 ---
 
 ## Users
