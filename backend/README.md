@@ -399,20 +399,7 @@ All endpoints run on localhost:7284 by default
 </tr>
 
 </table>
-### Get All Specialists
-**GET** `/api/Specialist`
 
-Retrieves all specialists.
-
-**Response:**
-```json
-[
-  {
-    "id": "guid",
-    // ... other specialist properties
-  }
-]
-```
 ---
 
 ## Users
