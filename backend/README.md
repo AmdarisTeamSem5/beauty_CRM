@@ -165,7 +165,7 @@ All API endpoints are relative to: `/api/[controller]`
   <td> Post a single Salon </td>
   <td> 
 
-**Endpoint** `POST api/Salon `
+**Endpoint** `POST /api/Salon `
 
 **Body**
 ```json
@@ -194,60 +194,124 @@ All API endpoints are relative to: `/api/[controller]`
 
 ---
 
-
 ## Salon Services
 
-### Get All Salon Services
-**GET** `/api/SalonService`
+<table> <tr> <th>Description</th> <th>Request</th> <th>Response</th> </tr>
+<tr>
+  <td> Get a list of all salon services</td>
+  <td>
 
-Retrieves all salon services.
+**Endpoint** `GET /api/SalonService`
 
-**Response:**
+**Body** `none`
+  </td>
+  <td>
+
+**Response shape**
 ```json
 [
   {
-    "id": "guid",
-    // ... other service properties
-  }
+    "id":"guid_string",
+    "salonId": "guid_string",
+    "specialistId": "guid_string",
+    "type": "number",
+    "name": "string",
+    "description": "string",
+    "durationMinutes": "number",
+    "priceMDL": "number"
+  }, {...}
 ]
 ```
+  </td>
+  
+</tr>
+<tr>
+  <td>Get 1 salon service by ID</td>
+  <td>
 
-### Get Salon Service
-**GET** `/api/SalonService/{id}`
+**Endpoint** `POST /api/SalonService/{id}`
 
-Retrieves a specific salon service by ID.
+**Body** 
+```json
+{
+  "type": "number",
+  "name": "string",
+  "description": "string",
+  "salonId": "guid_string",
+  "specialistId": "guid_string",
+  "durationMinutes": "number",
+  "priceMDL": "number"
+}
+```
+  </td>
+  <td>
 
-**Parameters:**
-- `id` (guid, in path) - Service ID
+**Response shape** `guid_string`
+  </td>
+</tr>
 
-**Response:** SalonServiceDto
+<tr>
+  <td>Get a salon service by id</td>
+  <td>
 
-### Create Salon Service
-**POST** `/api/SalonService`
+**Endpoint** `GET /api/SalonService/{id}`
 
-Creates a new salon service.
+**Body** `none`
+  </td>
+  <td>
 
-**Request Body:** CreateSalonServiceDto
+**Response shape**
+```json
+{
+  "type": "number",
+  "name": "string",
+  "description": "string",
+  "salonid": "guid_string",
+  "specialistid": "guid_string",
+  "durationminutes": "number",
+  "pricemdl": "number"
+}
+```
+  </td>
+</tr>
+<tr>
+  <td>Update a salon service by id </td>
+  <td>
 
-**Response:** `guid` (ID of created service)
+**Endpoint** `PATCH /api/SalonSercice/{id}`
 
-### Edit Salon Service
-**PATCH** `/api/SalonService/{id}`
+**Body**
+```json
+{
+  "type": "number",
+  "name": "string",
+  "description": "string",
+  "salonid": "guid_string",
+  "specialistid": "guid_string",
+  "durationminutes": "number",
+  "pricemdl": "number"
+}
+```
+  </td>
+  <td>
 
-Updates an existing salon service.
+**Response shape** `none`
+  </td>
+</tr>
+<tr>
+  <td> Delete a salon service by id </td>
+  <td>
 
-**Parameters:**
-- `id` (guid, in path) - Service ID
+**Endpoint** `DELETE /api/SalonService/{id}`
 
-**Request Body:** EditSalonServiceDto
+**Body** `none`
+  </td>
+  <td>
 
-### Delete Salon Service
-**DELETE** `/api/SalonService/{id}`
-
-Deletes a salon service.
-
-**Parameters:**
-- `id` (guid, in path) - Service ID
+**Response shape** `none`
+  </td>
+</tr>
+</table>
 
 ---
 
