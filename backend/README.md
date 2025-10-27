@@ -1,14 +1,14 @@
 # API DOC
 
 ## Table of Contents
-- [Authentication](#authentication)
 - [Appointments](#appointments)
 - [Miscellaneous](#miscellaneous)
-- [Roles](#roles)
 - [Salons](#salons)
 - [Salon Services](#salon-services)
 - [Specialists](#specialists)
 - [Users](#users)
+- [Authentication](#authentication)
+- [Roles](#roles)
 
 ## Base URL
 All API endpoints are relative to: `/api/[controller]`
@@ -17,204 +17,183 @@ All API endpoints are relative to: `/api/[controller]`
 
 ## Appointments
 
-### Get All Appointments
-**GET** `/api/Appointment`
+<table> <tr><th>Description</th> <th>Request</th> <th>Response</th> </tr> 
 
-Retrieves all appointments.
+<tr> 
+  <td>Get a list of all appointments</td>
 
-**Response:**
+  <td>
+
+**Endpoint** `GET /api/Appointment`
+
+**Body:** `none`
+  </td> 
+
+  <td>
+
+**Response shape**
 ```json
 [
   {
-    "id": "guid",
-    // ... other appointment properties
-  }
+    "id": "guid_string",
+    "clientId": "guid_string",
+    "specialistId": "guid_string",
+    "salonId":"guid_string",
+    "confirmed": "bool"
+  }, {...}
 ]
 ```
+  </td>
+</tr> 
 
-### Get Appointment
-**GET** `/api/Appointment/{id}`
+<tr>
+  <td> Post 1 appointment </td>
+  <td>
 
-Retrieves a specific appointment by ID.
+**Endpoint** `POST /api/Appointment`
 
-**Parameters:**
-- `id` (guid, in path) - Appointment ID
+**Body:**
+```json
+{
+  "clientId": "guid_string",
+  "salonServiceId": "guid_string",
+  "salonId": "guid_string",
+  "appointmentDate": "datetime:2025-10-27T10:01:36.213Z",
+  "confirmed": "bool"
+}
+```
+  </td> 
 
-**Response:** AppointmentDto
+  <td>
 
-### Create Appointment
-**POST** `/api/Appointment`
+**Response shape** `guid_string`
+  </td> 
+</tr> 
+<tr> 
+  <td> Get an appointment based on it's guid</td>
 
-Creates a new appointment.
+  <td>
 
-**Request Body:** CreateAppointmentDto
+**Endpoint** `GET /api/Appointment/{guid}`
 
-**Response:** `guid` (ID of created appointment)
+**Body** `none`
+  </td>
+
+  <td>
+
+**Response shape**
+```json
+{
+  "id": "guid_string",
+  "clientId": "guid_string",
+  "specialistId": "guid_string",
+  "salonId": "guid_string",
+  "confirmed": "bool"
+}
+```
+
+  </td> 
+</tr>
+</table>
 
 ---
 
 ## Miscellaneous
 
-### Get Service Types
-**GET** `/api/Misc/ServiceTypes`
+<table> <tr><th>Description</th> <th>Request</th> <th>Response</th> </tr> 
+<tr>
+  <td> Get a list of all Service Types </td>
+  <td> 
 
-Retrieves all available salon service types.
+**Endpoint** `GET /api/Misc/ServiceTypes`  
+  
+**Body** `none`
+  </td>
 
-**Response:**
+  <td>
+
+**Response shape**
 ```json
 [
   {
-    "id": "int",
-    "name": "string"
-  }
+    "id" : "number",
+    "name" : "string"
+  }, {...}
 ]
 ```
-
----
-
-## Roles
-
-### Get All Roles
-**GET** `/api/Role`
-
-Retrieves all roles.  
-**Authorization:** Requires `ViewRoles` permission.
-
-**Response:**
-```json
-[
-  {
-    "id": "guid",
-    "name": "string"
-  }
-]
-```
-
-### Get Role
-**GET** `/api/Role/{id}`
-
-Retrieves a specific role by ID.  
-**Authorization:** Requires `ViewRoles` permission.
-
-**Parameters:**
-- `id` (guid, in path) - Role ID
-
-**Response:** RoleDto
-
-### Create Role
-**POST** `/api/Role`
-
-Creates a new role.  
-**Authorization:** Requires `ManageRoles` permission.
-
-**Request Body:** CreateRoleDto
-
-**Response:** `guid` (ID of created role)
-
-### Edit Role
-**PATCH** `/api/Role/{id}`
-
-Updates an existing role.  
-**Authorization:** Requires `ManageRoles` permission.
-
-**Parameters:**
-- `id` (guid, in path) - Role ID
-
-**Request Body:** EditRoleDto
-
-### Get Role Permissions
-**GET** `/api/Role/{id}/permissions`
-
-Retrieves permissions for a specific role.  
-**Authorization:** Requires `ViewRoles` permission.
-
-**Parameters:**
-- `id` (guid, in path) - Role ID
-
-**Response:** List of Permission enums
-
-### Manage Role Permissions
-**POST** `/api/Role/{id}/permissions`
-
-Updates permissions for a role.  
-**Authorization:** Requires `ManageRoles` permission.
-
-**Parameters:**
-- `id` (guid, in path) - Role ID
-
-**Request Body:**
-```json
-{
-  "permissionsToAdd": ["Permission1", "Permission2"],
-  "permissionsToRemove": ["Permission3", "Permission4"]
-}
-```
-
-### Delete Role
-**DELETE** `/api/Role/{id}`
-
-Deletes a role.
-
-**Parameters:**
-- `id` (guid, in path) - Role ID
+  </td>
+</tr>
+</table>
 
 ---
 
 ## Salons
 
-### Get All Salons
-**GET** `/api/Salon`
+<table> <tr> <th>Description</th> <th>Request</th> <th>Response</th> </tr>
+<tr>
+  <td>Get a list of all Salons<td>
+  <td>
+    
+**Endpoint** `GET /api/Salon`
 
-Retrieves all salons.
+**Body** `none`
+  </td>
 
-**Response:**
+  <td>
+
+**Response shape**
 ```json
 [
   {
-    "id": "guid",
-    // ... other salon properties
+    "id": "guid_string",
+    "ownerId": "guid_string",
+    "name": "string",
+    "rating": "number",
+    "description": "string",
+    "address": "string",
+    "region": "number",
+    "phone": "string",
+    "email": "string",
+    "createdAt": "datetime:2025-10-27T10:26:12.598Z",
+    "updatedAt": "datetime:2025-10-27T10:26:12.598Z"
   }
 ]
 ```
+  </td>
+</tr>
+<tr>
+  <td> Post a single Salon </td>
+  <td> 
 
-### Get Salon
-**GET** `/api/Salon/{id}`
+**Endpoint** `POST api/Salon `
 
-Retrieves a specific salon by ID.
+**Body**
+```json
+{
+  "ownerId": "guid_string",
+  "name": "string",
+  "rating": "number",
+  "description": "string",
+  "address": "string",
+  "region": "number",
+  "phone": "string",
+  "email": "string",
+  "dateTime": "datetime:2025-10-27T10:28:44.369Z",
+  "ratingCount": "number"
+}
+```
+  </td>
+  <td>
 
-**Parameters:**
-- `id` (guid, in path) - Salon ID
+**Response** `guid_string`
+  </td>
 
-**Response:** SalonDto
+</tr>
 
-### Create Salon
-**POST** `/api/Salon`
-
-Creates a new salon.
-
-**Request Body:** CreateSalonDto
-
-**Response:** `guid` (ID of created salon)
-
-### Edit Salon
-**PATCH** `/api/Salon/{id}`
-
-Updates an existing salon.
-
-**Parameters:**
-- `id` (guid, in path) - Salon ID
-
-**Request Body:** EditSalonDto
-
-### Delete Salon
-**DELETE** `/api/Salon/{id}`
-
-Deletes a salon.
-
-**Parameters:**
-- `id` (guid, in path) - Salon ID
+</table>
 
 ---
+
 
 ## Salon Services
 
@@ -468,3 +447,90 @@ Resets user password using a security code.
 
 ---
 
+## Roles
+
+### Get All Roles
+**GET** `/api/Role`
+
+Retrieves all roles.  
+**Authorization:** Requires `ViewRoles` permission.
+
+**Response:**
+```json
+[
+  {
+    "id": "guid",
+    "name": "string"
+  }
+]
+```
+
+### Get Role
+**GET** `/api/Role/{id}`
+
+Retrieves a specific role by ID.  
+**Authorization:** Requires `ViewRoles` permission.
+
+**Parameters:**
+- `id` (guid, in path) - Role ID
+
+**Response:** RoleDto
+
+### Create Role
+**POST** `/api/Role`
+
+Creates a new role.  
+**Authorization:** Requires `ManageRoles` permission.
+
+**Request Body:** CreateRoleDto
+
+**Response:** `guid` (ID of created role)
+
+### Edit Role
+**PATCH** `/api/Role/{id}`
+
+Updates an existing role.  
+**Authorization:** Requires `ManageRoles` permission.
+
+**Parameters:**
+- `id` (guid, in path) - Role ID
+
+**Request Body:** EditRoleDto
+
+### Get Role Permissions
+**GET** `/api/Role/{id}/permissions`
+
+Retrieves permissions for a specific role.  
+**Authorization:** Requires `ViewRoles` permission.
+
+**Parameters:**
+- `id` (guid, in path) - Role ID
+
+**Response:** List of Permission enums
+
+### Manage Role Permissions
+**POST** `/api/Role/{id}/permissions`
+
+Updates permissions for a role.  
+**Authorization:** Requires `ManageRoles` permission.
+
+**Parameters:**
+- `id` (guid, in path) - Role ID
+
+**Request Body:**
+```json
+{
+  "permissionsToAdd": ["Permission1", "Permission2"],
+  "permissionsToRemove": ["Permission3", "Permission4"]
+}
+```
+
+### Delete Role
+**DELETE** `/api/Role/{id}`
+
+Deletes a role.
+
+**Parameters:**
+- `id` (guid, in path) - Role ID
+
+---
