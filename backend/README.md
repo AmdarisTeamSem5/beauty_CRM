@@ -11,8 +11,8 @@
 - [Roles](#roles)
 
 ## Base URL
-All API endpoints are relative to: `/api/[controller]`
 
+All endpoints run on localhost:7284 by default
 ---
 
 ## Appointments
@@ -681,4 +681,6 @@ Deletes a role.
 - `id` (guid, in path) - Role ID
 
 ---
+
+
 
