@@ -317,6 +317,89 @@ All API endpoints are relative to: `/api/[controller]`
 
 ## Specialists
 
+<table> <tr> <th>Description</th> <th>Request</th> <th>Response</th> </tr>
+<tr>
+  <td> Get a list of all Specialists</td>
+  <td>
+
+**Endpoint** `GET /api/Specialist`
+
+**Body** `none`
+  </td>
+  <td>
+
+**Response shape**
+```json
+[
+  {
+    "id": "guid_string",
+    "salonId": "guid_string",
+    "fullName": "string",
+    "description": "string",
+    "imageString64": "string"
+  }, {...}
+]
+```
+  </td>
+</tr>
+<tr>
+  <td>Create 1 Specialist entry</td>
+  <td>
+
+**Endpoint** `POST /api/Specialist`
+
+**Body**
+```json
+{
+  "id": "guid_string",
+  "salonId": "guid_string",
+  "fullName": "string",
+  "description": "string",
+  "imageString64": "string"
+}
+```
+  </td>
+  <td>
+
+**Response shape** `guid_string`
+  </td>
+</tr>
+<tr>
+// get 1
+  <td> Get 1 Specialist by Id</td>
+  <td>
+
+**Endpoint** `GET /api/Specialist/{id}`
+
+**Body** `none`
+  </td>
+  <td>
+
+**Response shape**
+```json
+{
+  "id": "guid_string",
+  "salonId": "guid_string",
+  "fullName": "string",
+  "description": "string",
+  "imageString64": "string"
+}
+```
+  </td>
+</tr>
+<tr>
+  <td> Delete a Specialist by id</td>
+  <td>
+
+**Endpoint** `DELETE /api/Specialist/{id}`
+  </td>
+  <td
+
+**Response shape** `none`
+  ></td>
+</tr>
+
+</table>
 ### Get All Specialists
 **GET** `/api/Specialist`
 
