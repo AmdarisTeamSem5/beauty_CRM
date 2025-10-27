@@ -156,7 +156,7 @@ All endpoints run on localhost:7284 by default
     "email": "string",
     "createdAt": "datetime:2025-10-27T10:26:12.598Z",
     "updatedAt": "datetime:2025-10-27T10:26:12.598Z"
-  }
+  }, {...}
 ]
 ```
   </td>
@@ -401,6 +401,10 @@ All endpoints run on localhost:7284 by default
 </table>
 
 ---
+
+# =======================
+# WORK IN PROGRESS BELLOW
+# =======================
 
 ## Users
 
