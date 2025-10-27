@@ -131,7 +131,7 @@ All API endpoints are relative to: `/api/[controller]`
 
 <table> <tr> <th>Description</th> <th>Request</th> <th>Response</th> </tr>
 <tr>
-  <td>Get a list of all Salons<td>
+  <td>Get a list of all Salons</td>
   <td>
     
 **Endpoint** `GET /api/Salon`
@@ -534,3 +534,4 @@ Deletes a role.
 - `id` (guid, in path) - Role ID
 
 ---
+
