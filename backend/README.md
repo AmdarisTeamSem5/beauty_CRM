@@ -26,7 +26,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/Appointment`
 
-**Body:** `none`
   </td> 
 
   <td>
@@ -76,7 +75,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/Appointment/{guid}`
 
-**Body** `none`
   </td>
 
   <td>
@@ -107,7 +105,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/Misc/ServiceTypes`  
   
-**Body** `none`
   </td>
 
   <td>
@@ -136,7 +133,15 @@ All endpoints run on localhost:7284 by default
     
 **Endpoint** `GET /api/Salon`
 
-**Body** `none`
+
+**Query parameters** 
+```
+      orderBy(string) 
+      ownerId(guid_string)
+      band(int in range 1..=3)
+      excludeSalonsWithNoService(boolean)
+      desc(boolean)
+```
   </td>
 
   <td>
@@ -203,7 +208,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/SalonService`
 
-**Body** `none`
   </td>
   <td>
 
@@ -256,7 +260,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/SalonService/{id}`
 
-**Body** `none`
   </td>
   <td>
 
@@ -304,7 +307,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `DELETE /api/SalonService/{id}`
 
-**Body** `none`
   </td>
   <td>
 
@@ -324,7 +326,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/Specialist`
 
-**Body** `none`
   </td>
   <td>
 
@@ -370,7 +371,6 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `GET /api/Specialist/{id}`
 
-**Body** `none`
   </td>
   <td>
 
@@ -392,10 +392,10 @@ All endpoints run on localhost:7284 by default
 
 **Endpoint** `DELETE /api/Specialist/{id}`
   </td>
-  <td
+  <td>
 
 **Response shape** `none`
-  ></td>
+  </td>
 </tr>
 
 </table>
