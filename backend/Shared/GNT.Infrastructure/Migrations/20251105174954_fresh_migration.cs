@@ -5,24 +5,25 @@
 namespace GNT.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class update_appointments : Migration
+    public partial class fresh_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Comfirmed",
-                table: "Appointment",
-                newName: "Confirmed");
+            migrationBuilder.AddColumn<int>(
+                name: "Band",
+                table: "Salon",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Confirmed",
-                table: "Appointment",
-                newName: "Comfirmed");
+            migrationBuilder.DropColumn(
+                name: "Band",
+                table: "Salon");
         }
     }
 }

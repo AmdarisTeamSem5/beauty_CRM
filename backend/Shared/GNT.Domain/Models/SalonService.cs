@@ -22,7 +22,6 @@ public class SalonServiceConfiguration : IEntityTypeConfiguration<SalonService>
 {
     public void Configure(EntityTypeBuilder<SalonService> entity)
     {
-        // TODO:Adrin Define relationships between itself and other data
         entity.ConfigureBase();
     }
 }

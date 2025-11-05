@@ -4,7 +4,6 @@ using GNT.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GNT.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250924140739_Test_appointments2")]
-    partial class Test_appointments2
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +34,7 @@ namespace GNT.Infrastructure.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Comfirmed")
+                    b.Property<bool>("Confirmed")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedAt")
@@ -56,6 +53,8 @@ namespace GNT.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Appointment");
                 });
@@ -118,6 +117,9 @@ namespace GNT.Infrastructure.Migrations
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Band")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -266,6 +268,17 @@ namespace GNT.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSecurityCode");
+                });
+
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
+                {
+                    b.HasOne("GNT.Domain.Models.User", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("GNT.Domain.Models.RolePermission", b =>

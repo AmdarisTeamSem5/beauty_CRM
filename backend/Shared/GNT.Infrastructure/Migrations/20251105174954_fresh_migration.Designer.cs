@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GNT.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250922160933_Test_new_pr1")]
-    partial class Test_new_pr1
+    [Migration("20251105174954_fresh_migration")]
+    partial class fresh_migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,43 @@ namespace GNT.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SalonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SalonServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SpecialistId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Appointment");
+                });
 
             modelBuilder.Entity("GNT.Domain.Models.PriceBandOptions", b =>
                 {
@@ -83,6 +120,9 @@ namespace GNT.Infrastructure.Migrations
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Band")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -231,6 +271,17 @@ namespace GNT.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSecurityCode");
+                });
+
+            modelBuilder.Entity("GNT.Domain.Models.Appointment", b =>
+                {
+                    b.HasOne("GNT.Domain.Models.User", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("GNT.Domain.Models.RolePermission", b =>
