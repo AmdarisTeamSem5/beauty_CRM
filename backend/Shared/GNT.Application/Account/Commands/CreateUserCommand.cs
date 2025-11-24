@@ -34,6 +34,12 @@ public class CreateUserCommandHandler : RequestHandler<CreateUserCommand, Guid>
             throw new BusinessException(FailureCode.DuplicateEmail);
         } */
 
+        // Hash password if provided
+        if (!string.IsNullOrEmpty(request.PostModel.Password))
+        {
+            newUser.Password = AccountService.HashPassword(request.PostModel.Password);
+        }
+
         newUser.GenerateUserSecurityCode(SecurityCodeTypes.ResetPassword);
 
         await appDbContext.AddAndSaveChangesAsync(newUser, cancellationToken);

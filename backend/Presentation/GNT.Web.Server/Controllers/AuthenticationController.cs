@@ -7,6 +7,7 @@ using GNT.Application.Account.Queries;
 using GNT.Dtos.Enums;
 using Microsoft.Extensions.Options;
 using GNT.Shared.Dtos.UserManagement;
+using Microsoft.AspNetCore.Http;
 
 namespace GNT.Web.Server.Controllers
 {
@@ -30,7 +31,24 @@ namespace GNT.Web.Server.Controllers
         [HttpPost("log-in")]
         public async Task<TokenDto> Login([FromBody] LoginDto model)
         {
-            return await Mediator.Send(new LoginCommand(model.Email, model.Password, model.SecurityCode));
+            var token = await Mediator.Send(new LoginCommand(model.Email, model.Password, model.SecurityCode));
+            
+            // Set the token in an HTTP-only cookie
+            if (!string.IsNullOrEmpty(tokenOptions.CookieName) && !string.IsNullOrEmpty(token.Value))
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = false, // Set to true in production with HTTPS
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddSeconds(tokenOptions.ExpirationSeconds),
+                    Path = "/"
+                };
+                
+                Response.Cookies.Append(tokenOptions.CookieName, token.Value, cookieOptions);
+            }
+            
+            return token;
         }
 
         [HttpGet("log-out")]

@@ -130,53 +130,64 @@ export default function BookingProcess() {
   };
 
   const handleNewBooking = async () => {
+    if (!selectedService || !selectedSpecialist || !selectedDate || !selectedTime) {
+      alert("Please complete all booking steps");
+      return;
+    }
+
     try {
-      // 1. CREATE DUMMY USER
-      const userData = {
-        email: "test@test.com",
-        firstName: "Tester",
-        lastName: "Testy",
-        phoneNumber: "32434242432",
-        isBlocked: false,
-      };
-      const res = await fetch("http://localhost:5191/api/User", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!res.ok) throw new Error("Failed to create user");
+      const { appointmentService } = await import("@/lib/api/appointments");
+      const { salonService } = await import("@/lib/api/salons");
+      const { salonServiceService } = await import("@/lib/api/services");
 
-      const userId = await res.json();
-      // console.log(userId); // user's id
+      // Get salons to find a salon ID (in a real app, this would come from context or selection)
+      const salons = await salonService.getAll();
+      if (salons.length === 0) {
+        alert("No salons available. Please try again later.");
+        return;
+      }
 
-      // 2. USE USER'S ID TO CREATE APPOINTMENT
-      const appointmentData = {
-        clientId: userId,
-        salonServiceId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        salonId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        appointmentDate: "2025-09-25T11:00:08.146Z",
-        confirmed: true,
-      };
-      const appointmentRes = await fetch(
-        "http://localhost:5191/api/Appointment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(appointmentData),
-        }
+      // Get services to find the service ID
+      const services = await salonServiceService.getAll();
+      const matchingService = services.find(
+        (s: { name: string; id: string }) => s.name.toLowerCase().includes(selectedService.name.toLowerCase())
       );
-      if (!appointmentRes.ok) throw new Error("Failed to log new appointment");
-      const appointmentId = await appointmentRes.json();
-      console.log(appointmentId);
 
+      if (!matchingService) {
+        alert("Service not found. Please try again.");
+        return;
+      }
+
+      // Combine date and time
+      const [datePart] = selectedDate.split("T");
+      const [time, period] = selectedTime.split(" ");
+      const [hours, minutes] = time.split(":");
+      let hour24 = parseInt(hours);
+      if (period === "PM" && hour24 !== 12) hour24 += 12;
+      if (period === "AM" && hour24 === 12) hour24 = 0;
+
+      const appointmentDateTime = new Date(
+        `${datePart}T${hour24.toString().padStart(2, "0")}:${minutes}:00`
+      );
+
+      // Create appointment
+      const appointmentData = {
+        clientId: "00000000-0000-0000-0000-000000000000", // TODO: Get from authenticated user
+        salonServiceId: matchingService.id,
+        salonId: salons[0].id, // Use first available salon
+        appointmentDate: appointmentDateTime.toISOString(),
+        confirmed: false,
+        specialistId: String(selectedSpecialist.id), // Convert to string
+      };
+
+      const appointmentId = await appointmentService.create(appointmentData);
+      console.log("Appointment created:", appointmentId);
+
+      alert("Appointment booked successfully!");
       router.push("/dashboard");
 
     } catch (error) {
-      console.error(error);
+      console.error("Failed to create booking:", error);
     }
   }
 

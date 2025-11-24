@@ -22,8 +22,9 @@ app.UseCustomExceptionHandler();
 
 app.UseRouting();
 
-// app.UseAuthentication();
-// app.UseAuthorization();
+// Enable authentication/authorization so controllers can read the JWT
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {

@@ -13,13 +13,12 @@ export default function SalonResults() {
 
   const loadSalons = async () => {
     try {
-      // const data = await fetchSalons(filters);
-      const data = { salons: dummySalons };
+      const data = await fetchSalons(filters);
       setSalons(Array.isArray(data?.salons) ? data.salons : []);
-      console.log(data)
     } catch (err) {
       console.error("Failed to fetch salons", err);
-      setSalons([]); 
+      // Fallback to dummy data on error
+      setSalons(dummySalons);
     }
   };
 

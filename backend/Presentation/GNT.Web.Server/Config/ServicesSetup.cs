@@ -18,7 +18,10 @@ namespace GNT.Web.Server.Config
 
             services.AddCors(
                 o => o.AddPolicy("TEMPLATE_CORS_POLICY",
-                b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+                b => b.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials())); // Required when using credentials: "include"
 
             services.AddMemoryCache();
 

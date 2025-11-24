@@ -57,15 +57,32 @@ public class SendTwoFacttorCodeCommandHandler : RequestHandler<SendTwoFactorCode
         var firstName = user.FirstName;
         var email = user.Email;
 
-        string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\EmailTemplates";
-        
-        var template = File.ReadAllText(assemblyPath + "\\SendTwoFactorCode.html");
+        // Log security code to console for development/testing
+        Console.WriteLine("========================================");
+        Console.WriteLine($"Two-Factor Authentication Code Generated");
+        Console.WriteLine($"Email: {email}");
+        Console.WriteLine($"Name: {firstName}");
+        Console.WriteLine($"Security Code: {code}");
+        Console.WriteLine($"Expires At: {expiresAt}");
+        Console.WriteLine("========================================");
 
-        template = template.Replace("{SecurityCode}", code)
-            .Replace("{ExpiresAt}", expiresAt)
-            .Replace("{FirstName}", firstName);
+        try
+        {
+            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\EmailTemplates";
+            
+            var template = File.ReadAllText(assemblyPath + "\\SendTwoFactorCode.html");
 
-        //emailService.QuickSendAsync(subject: "Hemis New Login Code", body: template, to: email);
+            template = template.Replace("{SecurityCode}", code)
+                .Replace("{ExpiresAt}", expiresAt)
+                .Replace("{FirstName}", firstName);
+
+            //emailService.QuickSendAsync(subject: "Hemis New Login Code", body: template, to: email);
+        }
+        catch (Exception ex)
+        {
+            // If email template file is not found, just log to console
+            Console.WriteLine($"Note: Email template not found. Code logged to console above.");
+        }
 
         return Task.CompletedTask;
     }

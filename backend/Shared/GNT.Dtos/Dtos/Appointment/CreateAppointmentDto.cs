@@ -24,6 +24,7 @@ namespace GNT.Shared.Dtos.Appointments
             SalonId = salonId;
             AppointmentDate = appointmentDate;
             Confirmed = comfirmed;
+            SpecialistId = specialistId;
         }
 
         public Guid ClientId { get; set; }
@@ -32,6 +33,7 @@ namespace GNT.Shared.Dtos.Appointments
         public Guid SalonId { get; set; }
         public DateTime AppointmentDate { get; set; }
         public bool Confirmed { get; set; }
+        public Guid SpecialistId { get; set; }
 
 
     }

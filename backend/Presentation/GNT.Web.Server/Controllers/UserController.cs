@@ -54,4 +54,20 @@ public class UserController : BaseController
     {
         await Mediator.Send(new ManageUserRolesCommand(id, postModel));
     }
+
+    [HttpGet("current")]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        // Get current user from JWT token claims
+        var userIdClaim = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        {
+            // Return a proper 401 status instead of throwing an exception so
+            // the frontend can handle it cleanly.
+            return Unauthorized();
+        }
+
+        var user = await Mediator.Send(new UserQuery(userId));
+        return Ok(user);
+    }
 }
