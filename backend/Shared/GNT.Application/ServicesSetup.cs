@@ -117,13 +117,20 @@ namespace GNT.Application
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies[tokenOptions.CookieName] ??
-                                (string)context.Request.HttpContext.Items[tokenOptions.CookieName];
+                            // Only try to read from cookie if CookieName is configured
+                            if (!string.IsNullOrEmpty(tokenOptions.CookieName))
+                            {
+                                context.Token = context.Request.Cookies[tokenOptions.CookieName] ??
+                                    (string)context.Request.HttpContext.Items[tokenOptions.CookieName];
+                            }
 
                             if (string.IsNullOrEmpty(context.Token))
                             {
                                 context.Request.Headers.TryGetValue("Authorization", out var bearerToken);
-                                context.Token = bearerToken.ToString().Replace("bearer ", "");
+                                if (bearerToken.Count > 0)
+                                {
+                                    context.Token = bearerToken.ToString().Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase);
+                                }
                             }
 
                             return Task.CompletedTask;

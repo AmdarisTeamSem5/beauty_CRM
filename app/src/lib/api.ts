@@ -1,19 +1,28 @@
-export async function fetchSalons(filters: {
-    services: string[];
-    priceRange: string | null;
-  }) {
-    const params = new URLSearchParams();
-  
+import { salonService } from "./api/salons";
+
+export interface SalonFilters {
+  services: string[];
+  priceRange: string | null;
+}
+
+export async function fetchSalons(filters: SalonFilters) {
+  try {
+    // Convert filters to backend query parameters
+    const params: any = {};
+    
     if (filters.services.length > 0) {
-      params.append("services", filters.services.join(","));
+      // Note: Backend expects different parameter format, adjust as needed
+      params.services = filters.services.join(",");
     }
     if (filters.priceRange) {
-      params.append("priceRange", filters.priceRange);
+      params.priceRange = filters.priceRange;
     }
-  
-    const res = await fetch(`/api/salons?${params.toString()}`);
-    if (!res.ok) throw new Error("Failed to fetch salons");
-  
-    return res.json();
+
+    const salons = await salonService.getAll(params);
+    return { salons };
+  } catch (error) {
+    console.error("Failed to fetch salons:", error);
+    throw error;
   }
+}
   

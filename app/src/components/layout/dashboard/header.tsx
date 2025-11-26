@@ -24,14 +24,13 @@ export default function HeaderLayout({
   secondaryButtonAction,
 }: HeaderLayoutProps) {
   return (
-    <div className="md:-mx-42 w-screen md:px-42 bg-white border-b">
+    <div className="w-full bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          {" "}
           <div className="flex items-center space-x-4">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src={avatarSrc} alt={userName} />
-              <AvatarFallback className="bg-gray-200 text-gray-600">
+            <Avatar className="h-12 w-12 ring-2 ring-purple-100">
+              {avatarSrc && <AvatarImage src={avatarSrc} alt={userName} />}
+              <AvatarFallback className="bg-gradient-to-br from-purple-500 to-purple-600 text-white font-semibold">
                 {userInitials}
               </AvatarFallback>
             </Avatar>

@@ -1,147 +1,70 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5191/api";
+import { apiCall } from "./config";
 
-export interface Service {
+export interface SalonService {
   id: string;
+  salonId: string;
+  specialistId: string;
+  type: number;
   name: string;
   description: string;
-  category: string;
-  duration: number;
-  price: number;
-  status: "active" | "inactive";
-  createdAt: string;
-  updatedAt: string;
+  durationMinutes: number;
+  priceMDL: number;
 }
 
-export interface CreateServiceDto {
+export interface CreateSalonServiceDto {
+  type: number;
   name: string;
   description: string;
-  category: string;
-  duration: number;
-  price: number;
-  status?: "active" | "inactive";
+  salonId: string;
+  specialistId: string;
+  durationMinutes: number;
+  priceMDL: number;
 }
 
-export interface UpdateServiceDto {
+export interface UpdateSalonServiceDto {
+  type?: number;
   name?: string;
   description?: string;
-  category?: string;
-  duration?: number;
-  price?: number;
-  status?: "active" | "inactive";
+  salonId?: string;
+  specialistId?: string;
+  durationMinutes?: number;
+  priceMDL?: number;
 }
 
-class ServiceService {
-  private baseUrl: string;
+class SalonServiceService {
+  private baseUrl = "SalonService";
 
-  constructor() {
-    this.baseUrl = `${API_BASE_URL}/Service`;
+  async getAll(): Promise<SalonService[]> {
+    return apiCall<SalonService[]>(this.baseUrl, {
+      method: "GET",
+    });
   }
 
-  async getAll(): Promise<Service[]> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch services: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching services:", error);
-      throw error;
-    }
+  async getById(id: string): Promise<SalonService> {
+    return apiCall<SalonService>(`${this.baseUrl}/${id}`, {
+      method: "GET",
+    });
   }
 
-  async getById(id: string): Promise<Service> {
-    try {
-      const response = await fetch(`${this.baseUrl}/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch service: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error(`Error fetching service ${id}:`, error);
-      throw error;
-    }
+  async create(id: string, data: CreateSalonServiceDto): Promise<string> {
+    return apiCall<string>(`${this.baseUrl}/${id}`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   }
 
-  async create(data: CreateServiceDto): Promise<Service> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create service: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error creating service:", error);
-      throw error;
-    }
-  }
-
-  async update(id: string, data: UpdateServiceDto): Promise<Service> {
-    try {
-      const response = await fetch(`${this.baseUrl}/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update service: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error(`Error updating service ${id}:`, error);
-      throw error;
-    }
+  async update(id: string, data: UpdateSalonServiceDto): Promise<void> {
+    return apiCall<void>(`${this.baseUrl}/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
   }
 
   async delete(id: string): Promise<void> {
-    try {
-      const response = await fetch(`${this.baseUrl}/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete service: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error(`Error deleting service ${id}:`, error);
-      throw error;
-    }
-  }
-
-  async toggleStatus(id: string): Promise<Service> {
-    const service = await this.getById(id);
-    const newStatus = service.status === "active" ? "inactive" : "active";
-    return this.update(id, { status: newStatus });
+    return apiCall<void>(`${this.baseUrl}/${id}`, {
+      method: "DELETE",
+    });
   }
 }
 
-export const serviceService = new ServiceService();
+export const salonServiceService = new SalonServiceService();

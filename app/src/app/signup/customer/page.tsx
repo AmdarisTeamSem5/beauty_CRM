@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserIcon, Mail, Phone, MapPin } from "lucide-react";
+import { userService } from "@/lib/api/users";
 
 export default function CustomerSignupPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -18,6 +21,74 @@ export default function CustomerSignupPage() {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!form.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+    if (!form.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Invalid email format";
+    }
+    if (!form.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    }
+    if (!form.password) {
+      newErrors.password = "Password is required";
+    } else if (form.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    if (form.password !== form.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrors({});
+
+    try {
+      const userData = {
+        email: form.email,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phoneNumber: form.phone,
+        isBlocked: false,
+        password: form.password,
+      };
+
+      const userId = await userService.create(userData);
+      console.log("User created successfully:", userId);
+
+      // Show success message and redirect
+      alert("Account created successfully! You can now log in.");
+      router.push("/");
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      setErrors({
+        submit: error.message || "Registration failed. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
@@ -136,9 +207,21 @@ export default function CustomerSignupPage() {
             />
           </div>
 
+          {/* Error message */}
+          {errors.submit && (
+            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+              {errors.submit}
+            </div>
+          )}
+
           {/* Submit */}
-          <Button className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600">
-            Create Account →
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 disabled:opacity-50"
+          >
+            {isSubmitting ? "Creating Account..." : "Create Account →"}
           </Button>
         </CardContent>
       </Card>

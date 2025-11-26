@@ -40,19 +40,11 @@ public class AppointmentController : BaseController
         return await Mediator.Send(new CreateAppointmentCommand(postModel));
     }
 
-    // TODO: Implement this
-    //
-    // [HttpPatch("{id}")]
-    // public async Task Edit([FromRoute] Guid id, [FromBody] EditAppointmentDto model)
-    // {
-    //     await Mediator.Send(new EditAppointmentCommand(id, model));
-    // }
-    //
-    // [HttpDelete("{id}")]
-    // public async Task Delete([FromRoute] Guid id)
-    // {
-    //     await Mediator.Send(new DeleteAppointmentCommand(id));
-    // }
+    [HttpDelete("{id}")]
+    public async Task Delete([FromRoute] Guid id)
+    {
+        await Mediator.Send(new DeleteAppointmentCommand(id));
+    }
 
 
 

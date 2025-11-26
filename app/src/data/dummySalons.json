@@ -20,7 +20,7 @@
     {
         "id": "2",
         "ownerId": "102",
-        "name": "Elegance Beauty Studio",
+        "name": "Elegance Bedasdasdauty Studio",
         "description": "Full-service beauty salon specializing in skincare and nails.",
         "address": "45 Rose Ave, Downtown",
         "region": "south",
@@ -28,7 +28,7 @@
         "email": "contact@elegancebeauty.com",
         "image": "https://images.unsplash.com/photo-1707930897652-6ed8e2c33d99?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGluayUyMGJlYXV0eSUyMHNhbG9uc3xlbnwwfHwwfHx8MA%3D%3D",
         "priceLevel": 4,
-        "rating": 4.8,
+        "rating": 4,
         "services": [
             "Balayage",
             "Facials",
