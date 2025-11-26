@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { ServicesFilter } from "./servicesFilter";
 import { PriceRangeFilter } from "./priceRangeFilter";
 import { RatingFilter } from "./ratingFilter";
@@ -13,6 +14,7 @@ import { fetchSalons } from "@/lib/api";
 const SalonsFilters = () => {
   const filters = useFilters();
   const [open, setOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const clearFilters = () => {
     filters.clear();
@@ -41,14 +43,29 @@ const SalonsFilters = () => {
       <Card
         className={`w-full ${
           open ? "block" : "hidden"
-        } lg:block lg:sticky lg:top-4`}
+        } lg:block`}
       >
-        <CardHeader className="pb-4">
+        <CardHeader 
+          className="pb-4 cursor-pointer hover:bg-gray-50 transition-colors lg:cursor-default lg:hover:bg-transparent"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
           <div className="flex justify-between items-center">
-            <CardTitle className="text-lg font-semibold">Filters</CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-lg font-semibold">Filters</CardTitle>
+              <div className="lg:hidden">
+                {isCollapsed ? (
+                  <ChevronDown className="h-4 w-4 text-gray-500" />
+                ) : (
+                  <ChevronUp className="h-4 w-4 text-gray-500" />
+                )}
+              </div>
+            </div>
             <div className="flex gap-2">
               <Button
-                onClick={applyFilters}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  applyFilters();
+                }}
                 variant="ghost"
                 size="sm"
                 className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
@@ -56,7 +73,10 @@ const SalonsFilters = () => {
                 Apply
               </Button>
               <Button
-                onClick={clearFilters}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearFilters();
+                }}
                 variant="ghost"
                 size="sm"
                 className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
@@ -66,13 +86,16 @@ const SalonsFilters = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <ServicesFilter filters={filters} />
-          <PriceRangeFilter filters={filters} />
-          <RatingFilter filters={filters} />
-          <DistanceFilter filters={filters} />
-          <OtherFilter filters={filters} />
-        </CardContent>
+        
+        {!isCollapsed && (
+          <CardContent className="space-y-6">
+            <ServicesFilter filters={filters} />
+            <PriceRangeFilter filters={filters} />
+            <RatingFilter filters={filters} />
+            <DistanceFilter filters={filters} />
+            <OtherFilter filters={filters} />
+          </CardContent>
+        )}
       </Card>
     </>
   );
