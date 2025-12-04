@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GNT.Web.Server.Controllers;
 
-    // [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class MiscController : BaseController
-    {
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class MiscController : BaseController
+{
     [HttpGet("ServiceTypes")]
     public IActionResult GetSalonServiceTypes()
     {

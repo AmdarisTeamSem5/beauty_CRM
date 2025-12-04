@@ -1,0 +1,394 @@
+//@generic imports
+using Microsoft.Extensions.Options;
+using GNT.Shared.Dtos.Pagination;
+using GNT.Shared.Dtos;
+using GNT.Shared.Enums;
+using GNT.Dtos.Enums;
+using GNT.Web.Server.Config;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+
+
+
+//@account imports
+using GNT.Application.Account.Commands;
+using GNT.Application.Account.Utils;
+using GNT.Application.Security;
+using GNT.Application.Account.Queries;
+using GNT.Shared.Dtos.UserManagement;
+
+//@appointment imports
+using GNT.Application.Appointments.Commands;
+using GNT.Application.Appointments.Queries;
+using GNT.Shared.Dtos.Appointments;
+
+//@role imports
+using GCSS.Administration.Application.Organizations.Queries;
+using GCSS.Administration.Application.Roles.Commands;
+using GCSS.Administration.Application.Roles.Queries;
+using GNT.Shared.Dtos.Roles;
+
+//@salon imports
+using GNT.Application.Salons.Commands;
+using GNT.Application.Salons.Queries;
+// using GNT.Shared.Dtos.PriceBandOptions;
+// using GNT.Shared.Dtos.Pricing;
+using GNT.Shared.Dtos.Salons;
+
+//@service imports
+using GNT.Application.SalonServices.Commands;
+using GNT.Application.SalonServices.Queries;
+using GNT.Shared.Dtos.SalonServices;
+
+//@specialist imports
+using GNT.Application.Specialists.Commands;
+using GNT.Application.Specialists.Queries;
+using GNT.Shared.Dtos.Specialists;
+
+
+namespace GNT.Web.Server.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AuthenticationController : BaseController
+{
+    private readonly TokenProviderOptions tokenOptions;
+
+    public AuthenticationController(IOptions<TokenProviderOptions> tokenOptions)
+    {
+        this.tokenOptions = tokenOptions.Value;
+    }
+
+    [HttpPost("send-two-factor-code")]
+    public async Task SendTwoFactorAuthenticationCode([FromBody] LoginDto model)
+    {
+        await Mediator.Send(new SendTwoFactorCodeCommand(model.Email, model.Password));
+    }
+
+    [HttpPost("log-in")]
+    public async Task<TokenDto> Login([FromBody] LoginDto model)
+    {
+        return await Mediator.Send(new LoginCommand(model.Email, model.Password, model.SecurityCode));
+    }
+
+    [HttpGet("log-out")]
+    public IActionResult LogOut()
+    {
+        AuthHelper.RemoveUserKey();
+        Response.Cookies.Delete(tokenOptions.CookieName);
+
+        return Ok();
+    }
+
+    [HttpPost("reset-password-request")]
+    public async Task SendResetPasswordCode([FromBody] string email)
+    {
+        await Mediator.Send(new ResetPasswordRequestCommand(email));
+    }
+
+    [HttpGet("security-code/{securityCode}")]
+    public async Task<bool> CheckSecurityCode([FromRoute] string securityCode)
+    {
+        return await Mediator.Send(new CheckSecurityCodeQuery(securityCode, SecurityCodeTypes.ResetPassword));
+    }
+
+    [HttpPost("reset-password")]
+    public async Task ResetPassword([FromBody] ResetPasswordDto model)
+    {
+        var command = new ResetPasswordCommand(model);
+
+        await Mediator.Send(command);
+    }
+
+}
+
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class AppointmentController : BaseController
+{
+
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<AppointmentDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<AppointmentDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllAppointmentsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<AppointmentDto> Get([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new AppointmentQuery(id));
+    }
+
+    [HttpPost]
+    public async Task<Guid> Create([FromBody] CreateAppointmentDto postModel)
+    {
+        return await Mediator.Send(new CreateAppointmentCommand(postModel));
+    }
+
+    // TODO: Implement this
+    //
+    // [HttpPatch("{id}")]
+    // public async Task Edit([FromRoute] Guid id, [FromBody] EditAppointmentDto model)
+    // {
+    //     await Mediator.Send(new EditAppointmentCommand(id, model));
+    // }
+    //
+    // [HttpDelete("{id}")]
+    // public async Task Delete([FromRoute] Guid id)
+    // {
+    //     await Mediator.Send(new DeleteAppointmentCommand(id));
+    // }
+}
+
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class MiscController : BaseController
+{
+    [HttpGet("ServiceTypes")]
+    public IActionResult GetSalonServiceTypes()
+    {
+        var serviceTypes = Enum.GetValues(typeof(SalonServiceType))
+            .Cast<SalonServiceType>()
+            .Select(t => new
+            {
+                Id = (int)t,
+                Name = t.ToString(),
+            })
+            .ToList();
+
+        return Ok(serviceTypes);
+    }
+}
+
+
+// [Authorize]
+[Route("api/[controller]")]
+public class RoleController : BaseController
+{
+
+    [HttpGet]
+    [Authorize(Policy = nameof(Dtos.Enums.Permission.ViewRoles))]
+    public async Task<IEnumerable<RoleDto>> GetAllRoles()
+    {
+        var query = new RoleListQuery();
+
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("{id}")]
+    [Authorize(Policy = nameof(Permission.ViewRoles))]
+    public async Task<RoleDto> GetRole([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new RoleQuery(id));
+    }
+
+    [HttpPost]
+    [Authorize(Policy = nameof(Permission.ManageRoles))]
+    public async Task<Guid> CreateRole([FromBody] CreateRoleDto model)
+    {
+        return await Mediator.Send(new CreateRoleCommand(model));
+    }
+
+    [HttpPatch("{id}")]
+    [Authorize(Policy = nameof(Permission.ManageRoles))]
+    public async Task EditRole([FromRoute] Guid id, [FromBody] EditRoleDto model)
+    {
+        await Mediator.Send(new EditRoleCommand(id, model));
+    }
+
+    [HttpGet("{id}/permissionss")]
+    [Authorize(Policy = nameof(Permission.ViewRoles))]
+    public async Task<List<Permission>> GetRolePermissions([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new RolePermissionListQuery(id));
+    }
+
+    [HttpPost("{id}/permissions")]
+    [Authorize(Policy = nameof(Permission.ManageRoles))]
+    public async Task ManageRolePermissions([FromRoute] Guid id, [FromBody] ManageRolePermissionsDto postModel)
+    {
+        await Mediator.Send(new ManageRolePermissionsCommand(id, postModel.PermissionsToAdd, postModel.PermissionsToRemove));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task DeleteRole([FromRoute] Guid id)
+    {
+        await Mediator.Send(new DeleteRoleCommand(id));
+    }
+}
+
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class SalonController : BaseController
+{
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<SalonDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalonDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllSalonsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<SalonDto> Get([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new SalonQuery(id));
+    }
+
+    [HttpPost]
+    public async Task<Guid> Create([FromBody] CreateSalonDto postModel)
+    {
+        return await Mediator.Send(new CreateSalonCommand(postModel));
+    }
+
+    [HttpPatch("{id}")]
+    public async Task Edit([FromRoute] Guid id, [FromBody] EditSalonDto model)
+    {
+        await Mediator.Send(new EditSalonCommand(id, model));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task Delete([FromRoute] Guid id)
+    {
+        await Mediator.Send(new DeleteSalonCommand(id));
+    }
+}
+
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class SalonServiceController : BaseController
+{
+
+    [HttpGet]   // GET /api/salon
+    [ProducesResponseType(typeof(List<SalonServiceDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalonServiceDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllSalonServicesQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<SalonServiceDto> Get([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new SalonServiceQuery(id));
+    }
+
+    [HttpPost]
+    public async Task<Guid> Create([FromBody] CreateSalonServiceDto postModel)
+    {
+        return await Mediator.Send(new CreateSalonServiceCommand(postModel));
+    }
+
+    [HttpPatch("{id}")]
+    public async Task Edit([FromRoute] Guid id, [FromBody] EditSalonServiceDto model)
+    {
+        await Mediator.Send(new EditSalonServiceCommand(id, model));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task Delete([FromRoute] Guid id)
+    {
+        await Mediator.Send(new DeleteSalonServiceCommand(id));
+    }
+}
+
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class SpecialistController : BaseController
+{
+
+
+    [HttpGet]   // GET /api/specialist
+    [ProducesResponseType(typeof(List<SpecialistDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SpecialistDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllSpecialistsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<SpecialistDto> Get([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new SpecialistQuery(id));
+    }
+
+    [HttpPost]
+    public async Task<Guid> Create([FromBody] CreateSpecialistDto postModel)
+    {
+        return await Mediator.Send(new CreateSpecialistCommand(postModel));
+    }
+
+    // [HttpPatch("{id}")]
+    // public async Task Edit([FromRoute] Guid id, [FromBody] EditSpecialistDto model)
+    // {
+    //     await Mediator.Send(new EditSpecialistCommand(id, model));
+    // }
+
+    [HttpDelete("{id}")]
+    public async Task Delete([FromRoute] Guid id)
+    {
+        await Mediator.Send(new DeleteSpecialistCommand(id));
+    }
+
+}
+
+// [Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class UserController : BaseController
+{
+
+    [HttpGet]   // GET /api/user
+    [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<UserDto>>> GetAll(CancellationToken ct)
+    {
+        var result = await Mediator.Send(new GetAllUsersQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<UserDto> GetUser([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new UserQuery(id));
+    }
+
+    [HttpPost]
+    public async Task<Guid> CreateUser([FromBody] CreateUserDto postModel)
+    {
+        return await Mediator.Send(new CreateUserCommand(postModel));
+    }
+
+    [HttpPatch("{id}")]
+    public async Task EditUser([FromRoute] Guid id, [FromBody] EditUserDto model)
+    {
+        var command = new EditUserCommand(id, model);
+
+        await Mediator.Send(command);
+    }
+
+    [HttpGet("{id}/roles")]
+    public async Task<IEnumerable<RoleDto>> GetUserRoles([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new GetUserRoleListQuery(id));
+    }
+
+    [HttpPost("{id}/roles")]
+    public async Task ManageUserRoles([FromRoute] Guid id, [FromBody] ManageUserRolesDto postModel)
+    {
+        await Mediator.Send(new ManageUserRolesCommand(id, postModel));
+    }
+}
+
