@@ -94,23 +94,16 @@ export function AppointmentsView() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await fetch("http://localhost:5191/api/Appointment", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch appointments");
-
-        const data = await res.json();
+        const { appointmentService } = await import("@/lib/api/appointments");
+        const data = await appointmentService.getAll();
         setAppointments(data);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch appointments:", error);
         // Keep using mock data on error
       }
     };
 
-    // Uncomment when API is ready
-    // fetchAppointments();
+    fetchAppointments();
   }, []);
 
   const handleComplete = (appointmentId: string) => {

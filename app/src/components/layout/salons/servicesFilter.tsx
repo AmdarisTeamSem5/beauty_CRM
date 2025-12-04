@@ -3,12 +3,7 @@ import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useFilters } from "@/hooks/useFilters";
-
-
-type ServiceType = {
-  id: number;
-  name: string;
-};
+import { miscService, type ServiceType } from "@/lib/api/misc";
 
 export const ServicesFilter = ({
   filters,
@@ -23,9 +18,7 @@ export const ServicesFilter = ({
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await fetch("http://localhost:5191/api/Misc/ServiceTypes");
-        if (!res.ok) throw new Error("Failed to fetch services");
-        let data: ServiceType[] = await res.json();
+        let data = await miscService.getServiceTypes();
 
         data = data
           .map((s) => ({

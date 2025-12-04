@@ -61,7 +61,8 @@ public static class UserMapping
             FirstName = postModel.FirstName,
             LastName = postModel.LastName,
             PhoneNumber = postModel.PhoneNumber,
-            IsBlocked = postModel.IsBlocked
+            IsBlocked = postModel.IsBlocked,
+            Password = postModel.Password // Will be hashed in CreateUserCommand
         };
     }
 }

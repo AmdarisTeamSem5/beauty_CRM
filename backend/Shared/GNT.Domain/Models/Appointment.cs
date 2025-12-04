@@ -41,14 +41,14 @@ public static class AppointmentMapping
             return d => new AppointmentDto
             {
                 Id = d.Id,
-                // ClientId = d.ClientId,
-                // Client = d.Client,
-                // SalonServiceId = d.SalonServiceId,
-                // SalonId = d.SalonId,
-                // AppointmentDate = d.AppointmentDate,
-                // Confirmed = d.Confirmed,
-                // UpdatedAt = d.UpdatedAt,
-                // CreatedAt = d.CreatedAt,
+                ClientId = d.ClientId,
+                SalonServiceId = d.SalonServiceId,
+                SalonId = d.SalonId,
+                SpecialistId = d.SpecialistId,
+                AppointmentDate = d.AppointmentDate,
+                Confirmed = d.Confirmed,
+                UpdatedAt = d.UpdatedAt,
+                CreatedAt = d.CreatedAt,
             };
         }
     }
@@ -64,6 +64,7 @@ public static class AppointmentMapping
             SalonId = d.SalonId,
             AppointmentDate = d.AppointmentDate,
             Confirmed = d.Confirmed,
+            SpecialistId = d.SpecialistId,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
         };

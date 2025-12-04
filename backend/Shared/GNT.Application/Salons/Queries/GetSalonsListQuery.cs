@@ -26,11 +26,29 @@ internal sealed class GetAllSalonsQueryHandler
         GetAllSalonsQuery request,
         CancellationToken ct)
     {
-        // Return absolutely all salons, deterministically ordered
-        return await appDbContext.Salon
-            .OrderBy(s => s.Id)
+
+        var query = appDbContext.Salon.AsQueryable();
+
+        if (request.Band.HasValue)
+            query = query.Where(s => s.Band == request.Band.Value);
+
+        if (request.ExcludeSalonsWithNoServices)
+            query = query.Where(s => appDbContext.SalonService.Any(ss => ss.SalonId == s.Id));
+
+        if (request.OwnerId.HasValue)
+            query = query.Where(s => s.OwnerId == request.OwnerId.Value);
+
+        query = request.OrderBy?.ToLower() switch
+        {
+            "name" => request.Desc ? query.OrderByDescending(s => s.Name) : query.OrderBy(s => s.Name),
+            "priceband" => request.Desc ? query.OrderByDescending(s => s.Band) : query.OrderBy(s => s.Band),
+            _ => query.OrderBy(s => s.Id)
+        };
+
+        return await query
             .Select(SalonMapping.DtoProjection)
             .AsNoTracking()
             .ToListAsync(ct);
+
     }
 }

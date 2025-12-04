@@ -14,6 +14,7 @@ namespace GNT.Shared.Dtos.Salons
             Guid ownerId,
             string name,
             float rating,
+            PriceBand band,
             string description,
             string address,
             Region region,
@@ -25,6 +26,7 @@ namespace GNT.Shared.Dtos.Salons
             OwnerId = ownerId;
             Name = name;
             Rating = rating;
+            Band = band;
             Description = description;
             Address = address;
             Region = region;
@@ -36,6 +38,7 @@ namespace GNT.Shared.Dtos.Salons
         public Guid OwnerId { get; set; }
         public string Name { get; set; }
         public float Rating { get; set; }
+        public PriceBand Band { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
         public Region Region { get; set; }

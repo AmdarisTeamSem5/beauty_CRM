@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using GNT.Shared.Dtos.Salons;
 
 
-
 namespace GNT.Domain.Models;
 
 public class Salon : BaseEntity
@@ -15,6 +14,7 @@ public class Salon : BaseEntity
     public User Owner { get; set; }
     public string Name { get; set; }
     public float Rating { get; set; }
+    public PriceBand Band { get; set; }
     public string Description { get; set; }
     public string Address { get; set; }
     public Region Region { get; set; }
@@ -22,13 +22,9 @@ public class Salon : BaseEntity
     public string Email { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-
-
-  
-
 }
 
- 
+
 
 public class SalonConfiguration : IEntityTypeConfiguration<Salon>
 {
@@ -50,6 +46,7 @@ public static class SalonMapping
                 OwnerId = d.OwnerId,
                 Name = d.Name,
                 Rating = d.Rating,
+                Band = d.Band,
                 Description = d.Description,
                 Address = d.Address,
                 Region = d.Region,
@@ -69,6 +66,7 @@ public static class SalonMapping
             OwnerId = d.OwnerId,
             Name = d.Name,
             Rating = d.Rating,
+            Band = d.Band,
             Description = d.Description,
             Address = d.Address,
             Region = d.Region,

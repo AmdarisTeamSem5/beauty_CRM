@@ -8,6 +8,7 @@ public class SalonDto
     public Guid OwnerId { get; set; }
     public string Name { get; set; }
     public float Rating { get; set; }
+    public PriceBand Band { get; set; }
     public string Description { get; set; }
     public string Address { get; set; }
     public Region Region { get; set; }
